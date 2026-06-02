@@ -693,16 +693,48 @@ const CSV = (() => {
   let _fileName   = 'dutch_vocab.csv';
   let _isSample   = false;
 
-  // RFC-4180 compliant single-row parser (handles quoted commas)
-  function parseRow(line) {
+  // ── CSV parsing (Numbers-compatible) ────────────────────
+  //
+  // Handles:
+  //   • UTF-8 BOM (\uFEFF) prepended by Numbers / Excel
+  //   • \r\n, \r, or \n line endings
+  //   • Semicolon delimiter (Numbers on Dutch/European locale)
+  //   • Curly / smart quotes  " "  →  treated as regular quotes
+  //   • Trailing empty columns padded by Numbers
+  //   • Quoted fields containing the delimiter or newlines
+
+  function _normalise(text) {
+    // Strip BOM
+    if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+    // Normalise curly quotes to straight quotes
+    text = text.replace(/[\u201C\u201D]/g, '"');
+    // Normalise line endings to \n
+    text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    return text;
+  }
+
+  function _detectDelimiter(firstLine) {
+    // Count unquoted occurrences of , vs ;
+    let commas = 0, semis = 0, inQ = false;
+    for (const ch of firstLine) {
+      if (ch === '"') { inQ = !inQ; continue; }
+      if (inQ) continue;
+      if (ch === ',') commas++;
+      if (ch === ';') semis++;
+    }
+    return semis > commas ? ';' : ',';
+  }
+
+  function parseRow(line, delim) {
+    delim = delim || ',';
     const cols = [];
     let cur = '', inQ = false;
     for (let i = 0; i < line.length; i++) {
       const ch = line[i];
       if (ch === '"') {
-        if (inQ && line[i + 1] === '"') { cur += '"'; i++; }  // escaped quote
+        if (inQ && line[i + 1] === '"') { cur += '"'; i++; }  // escaped ""
         else inQ = !inQ;
-      } else if (ch === ',' && !inQ) {
+      } else if (ch === delim && !inQ) {
         cols.push(cur.trim());
         cur = '';
       } else {
@@ -716,22 +748,24 @@ const CSV = (() => {
   function csvCell(val) {
     if (val == null) return '';
     const s = String(val);
-    return (s.includes(',') || s.includes('"') || s.includes('\n'))
+    return (s.includes(',') || s.includes(';') || s.includes('"') || s.includes('\n'))
       ? '"' + s.replace(/"/g, '""') + '"'
       : s;
   }
 
   function parse(text) {
-    const lines = text.trim().split(/\r?\n/);
+    text = _normalise(text);
+    const lines = text.trim().split('\n');
+    const delim = _detectDelimiter(lines[0]);
     const cards = [];
-    for (let i = 1; i < lines.length; i++) {       // skip header row
+    for (let i = 1; i < lines.length; i++) {
       if (!lines[i].trim()) continue;
-      const c = parseRow(lines[i]);
-      const en  = c[0] || '';
-      const nl  = c[1] || '';
-      const ex1 = c[2] || '';
-      const ex2 = c[3] || '';
-      const result = c[4] || '';   // existing result column if present
+      const c      = parseRow(lines[i], delim);
+      const en     = c[0] || '';
+      const nl     = c[1] || '';
+      const ex1    = c[2] || '';
+      const ex2    = c[3] || '';
+      const result = c[4] || '';   // existing Result column if present
       if (en && nl) cards.push({ en, nl, ex1, ex2, result });
     }
     return cards;
@@ -856,7 +890,8 @@ const CSV = (() => {
 
   function goBackToBatch() {
     // Re-merge stored ratings so filter counts stay accurate
-    const base  = parse(_rawText || SAMPLE_CSV);
+    const src   = _rawText || SAMPLE_CSV;
+    const base  = parse(src);   // parse() now normalises internally
     _allCards   = _mergeStoredRatings(base, _fileName);
     _hasResult  = _allCards.some(c => c.result !== '');
     if (_hasResult) {
@@ -873,10 +908,12 @@ const CSV = (() => {
     const storedRatings  = Store.load(_fileName);
     const ratings = Object.assign({}, storedRatings, sessionRatings);
 
-    const lines    = _rawText.trim().split(/\r?\n/);
+    const normalised = _normalise(_rawText);
+    const lines      = normalised.trim().split('\n');
+    const delim      = _detectDelimiter(lines[0]);
 
     // Detect if header already has a Result column
-    const headerCols = parseRow(lines[0]);
+    const headerCols = parseRow(lines[0], delim);
     const hasResult  = headerCols.length >= 5 &&
       headerCols[4].toLowerCase() === 'result';
 
@@ -885,8 +922,8 @@ const CSV = (() => {
 
     for (let i = 1; i < lines.length; i++) {
       if (!lines[i].trim()) continue;
-      const c   = parseRow(lines[i]);
-      const key = (c[0] || '') + '|' + (c[1] || '');
+      const c   = parseRow(lines[i], delim);
+      const key = (c[0] || '').trim() + '|' + (c[1] || '').trim();
       const base = [
         csvCell(c[0] || ''),
         csvCell(c[1] || ''),
@@ -897,10 +934,10 @@ const CSV = (() => {
       newLines.push(base.join(','));
     }
 
-    const blob = new Blob([newLines.join('\n')], { type: 'text/csv' });
+    const blob = new Blob([newLines.join('\n')], { type: 'text/csv;charset=utf-8;' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    const base = _fileName.replace(/\.csv$/i, '');
+    const base = _fileName.replace(/\.(csv|tsv)$/i, '');
     a.download = base + '_results.csv';
     a.click();
   }
