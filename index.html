@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Dutch Flashcards</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/dist/tabler-icons.min.css">
+  <style>
+    /* ── Design tokens ─────────────────────────────────────────── */
+    :root {
+      --bg:        #ffffff;
+      --bg2:       #f5f5f3;
+      --bg3:       #eeede9;
+      --text:      #1a1a18;
+      --text2:     #6b6b67;
+      --text3:     #a0a09c;
+      --border:    rgba(0,0,0,0.12);
+      --border2:   rgba(0,0,0,0.22);
+      --r-md:      8px;
+      --r-lg:      12px;
+      --green:     #1D9E75;
+      --green-bg:  #E1F5EE;
+      --green-dk:  #0F6E56;
+      --amber-bg:  #FAEEDA;
+      --amber-tx:  #854F0B;
+      --coral-bg:  #FAECE7;
+      --coral-tx:  #993C1D;
+      --leaf-bg:   #EAF3DE;
+      --leaf-tx:   #3B6D11;
+      --blue-bg:   #E6F1FB;
+      --blue-tx:   #185FA5;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:       #1c1c1a;
+        --bg2:      #252523;
+        --bg3:      #2e2e2b;
+        --text:     #f0efea;
+        --text2:    #a0a09c;
+        --text3:    #6b6b67;
+        --border:   rgba(255,255,255,0.10);
+        --border2:  rgba(255,255,255,0.18);
+        --green-bg: #04342C;
+        --green-dk: #5DCAA5;
+        --amber-bg: #412402;
+        --amber-tx: #FAC775;
+        --coral-bg: #4A1B0C;
+        --coral-tx: #F0997B;
+        --leaf-bg:  #173404;
+        --leaf-tx:  #97C459;
+        --blue-bg:  #042C53;
+        --blue-tx:  #85B7EB;
+      }
+    }
+
+    /* ── Reset & base ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg3);
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 1rem;
+    }
+    #app {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    button { font-family: inherit; }
+
+    /* ── Shared utilities ──────────────────────────────────────── */
+    .card-surface {
+      background: var(--bg);
+      border-radius: var(--r-lg);
+      border: 0.5px solid var(--border);
+    }
+    .hidden { display: none !important; }
+
+    .btn-primary {
+      padding: 12px;
+      border-radius: var(--r-md);
+      border: 0.5px solid var(--border2);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.12s, transform 0.1s;
+    }
+    .btn-primary:active { background: var(--bg2); transform: scale(0.98); }
+
+    .btn-ghost {
+      background: none;
+      border: none;
+      font-size: 12px;
+      color: var(--text3);
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 4px 0;
+    }
+    .btn-ghost:hover { color: var(--text2); }
+
+    /* ── Screen: File upload ───────────────────────────────────── */
+    #screen-upload {
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      text-align: center;
+    }
+    #screen-upload h2 { font-size: 18px; font-weight: 500; color: var(--text); }
+
+    #drop-zone {
+      border: 1.5px dashed var(--border2);
+      border-radius: var(--r-lg);
+      padding: 2rem 1.5rem;
+      width: 100%;
+      cursor: pointer;
+      transition: background 0.15s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    #drop-zone:hover { background: var(--bg2); }
+    #drop-zone i     { font-size: 32px; color: var(--text2); }
+    #drop-zone p     { font-size: 14px; color: var(--text2); }
+    #drop-zone small { font-size: 12px; color: var(--text3); }
+
+    .divider {
+      font-size: 12px;
+      color: var(--text3);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 0.5px;
+      background: var(--border2);
+    }
+
+    .btn-row { display: flex; gap: 8px; width: 100%; }
+    #file-input { display: none; }
+
+    /* ── Screen: Batch select ─────────────────────────────────── */
+    #screen-batch {
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+    }
+    #screen-batch h2 { font-size: 18px; font-weight: 500; color: var(--text); }
+    #screen-batch p  { font-size: 14px; color: var(--text2); }
+
+    #batch-select {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 15px;
+      font-family: inherit;
+      border: 0.5px solid var(--border2);
+      border-radius: var(--r-md);
+      background: var(--bg);
+      color: var(--text);
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b6b67' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 40px;
+    }
+    #batch-select:focus { outline: none; border-color: var(--green); }
+
+    /* option rows on batch screen */
+    .option-row {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-align: left;
+    }
+    .option-row label {
+      font-size: 12px;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .toggle-group {
+      display: flex;
+      width: 100%;
+      gap: 0;
+      border: 0.5px solid var(--border2);
+      border-radius: var(--r-md);
+      overflow: hidden;
+    }
+    .toggle-group button {
+      flex: 1;
+      padding: 10px 8px;
+      font-size: 14px;
+      font-family: inherit;
+      border: none;
+      background: var(--bg);
+      color: var(--text2);
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s;
+    }
+    .toggle-group button + button {
+      border-left: 0.5px solid var(--border2);
+    }
+    .toggle-group button.active {
+      background: var(--green-bg);
+      color: var(--green);
+      font-weight: 500;
+    }
+    #filter-row { display: none; }
+    #filter-row.visible { display: flex; }
+
+    /* ── Screen: Flashcard session ─────────────────────────────── */
+    #screen-session {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    #top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    #progress-text { font-size: 13px; color: var(--text2); }
+
+
+    #progress-bar-wrap {
+      height: 3px;
+      background: var(--bg2);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    #progress-bar {
+      height: 100%;
+      background: var(--green);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    #card-area {
+      perspective: 1000px;
+      cursor: pointer;
+      user-select: none;
+    }
+    #card-inner {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      transform-style: preserve-3d;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #card-inner.flipped { transform: rotateY(180deg); }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: var(--r-lg);
+      border: 0.5px solid var(--border);
+      background: var(--bg);
+      padding: 1.5rem;
+    }
+    #card-back  { transform: rotateY(180deg); }
+    .card-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); }
+    .card-word  { font-size: 32px; font-weight: 500; color: var(--text); text-align: center; }
+    .card-hint  { font-size: 13px; color: var(--text3); margin-top: 4px; }
+
+    /* Example sentences */
+    #sentences-panel {
+      border-radius: var(--r-lg);
+      border: 0.5px solid var(--border);
+      background: var(--bg);
+      overflow: hidden;
+      transition: opacity 0.3s;
+    }
+    #sentences-panel.invisible { opacity: 0; pointer-events: none; }
+
+    #sentences-header {
+      padding: 10px 16px;
+      border-bottom: 0.5px solid var(--border);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    #sentences-header-left { display: flex; align-items: center; gap: 8px; }
+
+    .source-badge {
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+    .source-badge.manual { background: var(--leaf-bg); color: var(--leaf-tx); }
+    .source-badge.ai     { background: var(--blue-bg); color: var(--blue-tx); }
+
+    #sentences-body {
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 72px;
+    }
+    .sentence-item    { display: flex; flex-direction: column; gap: 3px; }
+    .sentence-nl      { font-size: 14px; color: var(--text); line-height: 1.5; }
+    .sentence-en      { font-size: 13px; color: var(--text2); line-height: 1.5; }
+    .sentence-divider { border: none; border-top: 0.5px solid var(--border); margin: 0; }
+
+    .loading-dots { display: inline-flex; gap: 4px; align-items: center; }
+    .loading-dots span {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--text3);
+      animation: dot-pulse 1.2s ease-in-out infinite;
+    }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes dot-pulse {
+      0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+      40%           { opacity: 1;   transform: scale(1);   }
+    }
+
+    #nav-row { display: flex; align-items: center; gap: 10px; }
+    .nav-btn {
+      flex: 1;
+      padding: 16px;
+      font-size: 20px;
+      border-radius: var(--r-md);
+      border: 0.5px solid var(--border2);
+      background: var(--bg);
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.12s, transform 0.1s;
+    }
+    .nav-btn:active { transform: scale(0.97); background: var(--bg2); }
+    #btn-reveal {
+      flex: 2;
+      border-color: var(--green-dk);
+      color: var(--green);
+    }
+    #btn-reveal:active { background: var(--green-bg); }
+
+    #result-row { display: none; gap: 8px; }
+    #result-row.visible { display: flex; }
+    .result-btn {
+      flex: 1;
+      padding: 10px;
+      font-size: 13px;
+      border-radius: var(--r-md);
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: transform 0.1s;
+    }
+    .result-btn:active { transform: scale(0.97); }
+    #btn-again   { background: var(--coral-bg); color: var(--coral-tx); }
+    #btn-hard    { background: var(--amber-bg); color: var(--amber-tx); }
+    #btn-correct { background: var(--leaf-bg);  color: var(--leaf-tx);  }
+
+    /* ── Screen: Done ──────────────────────────────────────────── */
+    #screen-done {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: .75rem;
+      min-height: 360px;
+      text-align: center;
+    }
+    #done-icon  { font-size: 48px; color: var(--green); }
+    #done-title { font-size: 22px; font-weight: 500; color: var(--text); }
+    #done-stats { font-size: 14px; color: var(--text2); line-height: 1.8; }
+    #done-csv-note { font-size: 12px; color: var(--text3); }
+  </style>
+</head>
+<body>
+<div id="app">
+
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 2 — File upload
+  ══════════════════════════════════════════ -->
+  <div id="screen-upload" class="card-surface hidden">
+    <h2>Load vocabulary</h2>
+
+    <div id="drop-zone" onclick="document.getElementById('file-input').click()">
+      <i class="ti ti-file-text" aria-hidden="true"></i>
+      <p>Upload your CSV file</p>
+      <small>Columns: English, Dutch, Example1, Example2</small>
+    </div>
+    <input type="file" id="file-input" accept=".csv">
+
+    <div class="divider">or</div>
+
+    <div class="btn-row">
+      <button class="btn-primary" style="flex:1;" onclick="CSV.loadSample()">
+        Use sample list
+      </button>
+      <button class="btn-primary" style="flex:1;" onclick="CSV.downloadTemplate()">
+        <i class="ti ti-download" aria-hidden="true"></i> CSV template
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 2b — Batch selector
+  ══════════════════════════════════════════ -->
+  <div id="screen-batch" class="card-surface hidden">
+    <i class="ti ti-layers-subtract" style="font-size:36px; color:var(--green);" aria-hidden="true"></i>
+    <h2>Choose a batch</h2>
+    <p id="batch-total-label"></p>
+
+    <!-- Batch dropdown -->
+    <div class="option-row">
+      <label>Batch (25 words)</label>
+      <select id="batch-select"></select>
+    </div>
+
+    <!-- Direction toggle -->
+    <div class="option-row">
+      <label>Direction</label>
+      <div class="toggle-group">
+        <button id="dir-en-nl" class="active" onclick="CSV.setDir('en-nl', this)">English → Dutch</button>
+        <button id="dir-nl-en"                onclick="CSV.setDir('nl-en', this)">Dutch → English</button>
+      </div>
+    </div>
+
+    <!-- Word filter (only shown when Result column exists) -->
+    <div class="option-row" id="filter-row">
+      <label>Words to study</label>
+      <div class="toggle-group">
+        <button id="filter-review" class="active" onclick="CSV.setFilter('review', this)">Words to review</button>
+        <button id="filter-all"                   onclick="CSV.setFilter('all', this)">All words</button>
+      </div>
+    </div>
+
+    <button class="btn-primary" style="width:100%; padding:13px;"
+            onclick="CSV.startBatch()">
+      Start →
+    </button>
+    <button class="btn-ghost" onclick="Nav.go('upload')">← Back</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 3 — Flashcard session
+  ══════════════════════════════════════════ -->
+  <div id="screen-session" class="hidden">
+
+    <div id="top-bar">
+      <span id="progress-text">Card 1 of 1</span>
+    </div>
+
+    <div id="progress-bar-wrap">
+      <div id="progress-bar" style="width:0%"></div>
+    </div>
+
+    <div id="card-area" onclick="Session.cardTap()">
+      <div id="card-inner">
+        <div class="card-face" id="card-front">
+          <span class="card-label" id="front-label">English</span>
+          <span class="card-word"  id="front-word">—</span>
+          <span class="card-hint">tap to reveal · tap again to flip</span>
+        </div>
+        <div class="card-face" id="card-back">
+          <span class="card-label" id="back-label">Dutch</span>
+          <span class="card-word"  id="back-word">—</span>
+          <span class="card-hint">tap to flip back</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="sentences-panel" class="invisible">
+      <div id="sentences-header">
+        <div id="sentences-header-left">
+          <i class="ti ti-quote" aria-hidden="true"></i>
+          example sentences
+        </div>
+        <span id="source-badge" class="source-badge"></span>
+      </div>
+      <div id="sentences-body">
+        <div class="loading-dots"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+
+    <div id="nav-row">
+      <button class="nav-btn" onclick="Session.prev()">
+        <i class="ti ti-arrow-left" aria-hidden="true"></i>
+      </button>
+      <button class="nav-btn" id="btn-reveal" onclick="Session.cardTap()">Reveal</button>
+      <button class="nav-btn" onclick="Session.next()">
+        <i class="ti ti-arrow-right" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <div id="result-row">
+      <button class="result-btn" id="btn-again"   onclick="Session.rate('wrong')">✗ Again</button>
+      <button class="result-btn" id="btn-hard"    onclick="Session.rate('hard')">~ Hard</button>
+      <button class="result-btn" id="btn-correct" onclick="Session.rate('correct')">✓ Got it</button>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 4 — Round done
+  ══════════════════════════════════════════ -->
+  <div id="screen-done" class="card-surface hidden">
+    <i class="ti ti-circle-check" id="done-icon" aria-hidden="true"></i>
+    <p id="done-title">Round complete!</p>
+    <p id="done-stats"></p>
+    <p id="done-saved-note" style="font-size:13px; color:var(--green); display:flex; align-items:center; gap:6px;">
+      <i class="ti ti-device-floppy"></i> Ratings saved in your browser
+    </p>
+    <button class="btn-primary" style="padding:12px 32px; width:100%;"
+            onclick="CSV.goBackToBatch()">
+      Choose another batch
+    </button>
+    <button class="btn-ghost" onclick="Nav.go('upload')">Load a different file</button>
+    <button class="btn-ghost" onclick="CSV.downloadWithResults()" style="font-size:12px; opacity:.7;">
+      <i class="ti ti-download"></i> Export CSV with results
+    </button>
+  </div>
+
+</div>
+
+<script>
+'use strict';
+
+/* ══════════════════════════════════════════════════════════
+   SAMPLE DATA
+   Format: English, Dutch, Example1, Example2
+   Example columns are optional. Leave them empty and AI
+   will generate sentences on-the-fly when you flip the card.
+   Each example column should contain:
+     Dutch sentence. (English translation.)
+   The app auto-parses the parenthesised English part.
+══════════════════════════════════════════════════════════ */
+const SAMPLE_CSV = `English,Dutch,Example1,Example2
+fact,feit,"Dit is een bekend feit. (This is a well-known fact.)","De feiten spreken voor zich. (The facts speak for themselves.)"
+to wish,wensen,"Ik wens je veel succes. (I wish you lots of success.)","Ze wenste hem een fijne verjaardag. (She wished him a happy birthday.)"
+demand,eis,"Dat is een redelijke eis. (That is a reasonable demand.)","Hij stelde hoge eisen. (He set high demands.)"
+influence,invloed,"Hij heeft veel invloed op de groep. (He has a lot of influence on the group.)","Muziek heeft invloed op je humeur. (Music has an influence on your mood.)"
+fixed,vast,"De prijs is vast. (The price is fixed.)","Hij heeft een vaste baan. (He has a permanent job.)"
+region,streek,"Dit is een mooie streek. (This is a beautiful region.)","De streek is bekend om zijn kaas. (The region is known for its cheese.)"
+leadership,leiding,"Ze neemt de leiding. (She takes the lead.)","Hij staat aan de leiding van het bedrijf. (He heads the company.)"
+hall,zaal,"De zaal was vol mensen. (The hall was full of people.)","We wachtten in de grote zaal. (We waited in the large hall.)"
+advice,raad,"Hij gaf me goede raad. (He gave me good advice.)","Heb je raad nodig? (Do you need advice?)"
+early,vroeg,"Ze staat vroeg op. (She gets up early.)","Het is nog vroeg. (It is still early.)"
+son,zoon,"Mijn zoon studeert medicijnen. (My son studies medicine.)","Hij is de oudste zoon. (He is the eldest son.)"
+thin,dun,"Het papier is erg dun. (The paper is very thin.)","Een dun laagje sneeuw. (A thin layer of snow.)"
+taste,smaak,"Dit heeft een zoete smaak. (This has a sweet taste.)","De soep heeft veel smaak. (The soup has a lot of flavour.)"
+busy,bezig,"Ik ben nu bezig. (I am busy now.)","Ze is de hele dag bezig geweest. (She has been busy all day.)"
+coast,kust,"We rijden langs de kust. (We drive along the coast.)","De kust is prachtig. (The coast is beautiful.)"
+bottom,bodem,"De emmer heeft een gat in de bodem. (The bucket has a hole in the bottom.)","We bereikten de bodem van het meer. (We reached the bottom of the lake.)"
+tear,traan,"Er liep een traan over haar wang. (A tear ran down her cheek.)","Hij kon zijn tranen niet inhouden. (He could not hold back his tears.)"`;
+
+
+/* ══════════════════════════════════════════════════════════
+   NAV — screen router
+══════════════════════════════════════════════════════════ */
+const Nav = (() => {
+  const SCREENS = ['upload', 'batch', 'session', 'done'];
+
+  function go(name) {
+    SCREENS.forEach(id => {
+      const el = document.getElementById('screen-' + id);
+      if (id === name) {
+        el.classList.remove('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    });
+  }
+
+  return { go };
+})();
+
+
+/* ══════════════════════════════════════════════════════════
+   STORE — persist ratings in localStorage, keyed by filename
+   ratings shape: { "en|nl": 'correct'|'hard'|'wrong' }
+══════════════════════════════════════════════════════════ */
+const Store = (() => {
+  const PREFIX = 'dutch_fc_ratings__';
+
+  function _key(fileName) { return PREFIX + fileName; }
+
+  // Load all saved ratings for a given file
+  function load(fileName) {
+    try {
+      const raw = localStorage.getItem(_key(fileName));
+      return raw ? JSON.parse(raw) : {};
+    } catch { return {}; }
+  }
+
+  // Merge + persist a ratings map for a given file
+  function save(fileName, ratings) {
+    try {
+      const existing = load(fileName);
+      const merged   = Object.assign({}, existing, ratings);
+      localStorage.setItem(_key(fileName), JSON.stringify(merged));
+    } catch (e) { console.warn('localStorage save failed:', e); }
+  }
+
+  // Wipe saved ratings for a file
+  function clear(fileName) { localStorage.removeItem(_key(fileName)); }
+
+  return { load, save, clear };
+})();
+
+
+/* ══════════════════════════════════════════════════════════
+   AUTH — API key management
+══════════════════════════════════════════════════════════ */
+const Auth = (() => {
+  const STORAGE_KEY = 'dutch_fc_api_key';
+  let _key = '';
+
+  function init() {
+    Nav.go('upload');
+  }
+
+  function save() {
+    const val = document.getElementById('apikey-input').value.trim();
+    if (val && !val.startsWith('sk-')) {
+      alert('That doesn\'t look like a valid key (should start with "sk-ant-").');
+      return;
+    }
+    _key = val;
+    if (val) localStorage.setItem(STORAGE_KEY, val);
+    Nav.go('upload');
+  }
+
+  function skip() {
+    _key = '';
+    Nav.go('upload');
+  }
+
+  function changeKey() {
+    localStorage.removeItem(STORAGE_KEY);
+    _key = '';
+    document.getElementById('apikey-input').value = '';
+    Nav.go('apikey');
+  }
+
+  function get() { return _key; }
+
+  return { init, save, skip, changeKey, get };
+})();
+
+
+/* ══════════════════════════════════════════════════════════
+   CSV — parsing, sample loading, template download
+   
+   Supported format:
+     English, Dutch, Example1, Example2, Result
+   
+   Example columns are optional. Each cell can contain:
+     Dutch sentence. (English translation.)
+   Wrap fields containing commas in double quotes:
+     "Ik ben bezig. (I am busy.)"
+══════════════════════════════════════════════════════════ */
+const CSV = (() => {
+
+  let _rawText    = '';    // original file text (kept for export)
+  let _fileName   = 'dutch_vocab.csv';
+  let _isSample   = false;
+
+  // RFC-4180 compliant single-row parser (handles quoted commas)
+  function parseRow(line) {
+    const cols = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') {
+        if (inQ && line[i + 1] === '"') { cur += '"'; i++; }  // escaped quote
+        else inQ = !inQ;
+      } else if (ch === ',' && !inQ) {
+        cols.push(cur.trim());
+        cur = '';
+      } else {
+        cur += ch;
+      }
+    }
+    cols.push(cur.trim());
+    return cols;
+  }
+
+  function csvCell(val) {
+    if (val == null) return '';
+    const s = String(val);
+    return (s.includes(',') || s.includes('"') || s.includes('\n'))
+      ? '"' + s.replace(/"/g, '""') + '"'
+      : s;
+  }
+
+  function parse(text) {
+    const lines = text.trim().split(/\r?\n/);
+    const cards = [];
+    for (let i = 1; i < lines.length; i++) {       // skip header row
+      if (!lines[i].trim()) continue;
+      const c = parseRow(lines[i]);
+      const en  = c[0] || '';
+      const nl  = c[1] || '';
+      const ex1 = c[2] || '';
+      const ex2 = c[3] || '';
+      const result = c[4] || '';   // existing result column if present
+      if (en && nl) cards.push({ en, nl, ex1, ex2, result });
+    }
+    return cards;
+  }
+
+  let _allCards  = [];   // full parsed card list
+  let _dir       = 'en-nl';   // 'en-nl' | 'nl-en'
+  let _filter    = 'review';  // 'review' | 'all'
+  let _hasResult = false;     // whether CSV has a Result column
+
+  const BATCH_SIZE = 25;
+
+  function setDir(dir, btn) {
+    _dir = dir;
+    document.querySelectorAll('#dir-en-nl, #dir-nl-en').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function setFilter(f, btn) {
+    _filter = f;
+    document.querySelectorAll('#filter-review, #filter-all').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    _rebuildBatchDropdown();   // update count + options immediately
+  }
+
+  function goBackToBatch() {
+    _rebuildBatchDropdown();
+    Nav.go('batch');
+  }
+
+  function _buildBatchOptions(cards) {
+    // Apply filter: if 'review', drop cards whose result === 'correct'
+    const filtered = (_hasResult && _filter === 'review')
+      ? cards.filter(c => c.result !== 'correct')
+      : cards;
+    return filtered;
+  }
+
+  function showBatchScreen(cards) {
+    _allCards   = cards;
+    _hasResult  = cards.some(c => c.result !== '');
+
+    // Show/hide the filter row
+    const filterRow = document.getElementById('filter-row');
+    if (_hasResult) {
+      filterRow.classList.add('visible');
+    } else {
+      filterRow.classList.remove('visible');
+      _filter = 'all';   // no Result column → no filtering
+    }
+
+    _rebuildBatchDropdown();
+    Nav.go('batch');
+  }
+
+  function _rebuildBatchDropdown() {
+    // Count filtered cards to build accurate batch list
+    const filtered = _buildBatchOptions(_allCards);
+    const total    = filtered.length;
+    const batches  = Math.ceil(total / BATCH_SIZE);
+
+    document.getElementById('batch-total-label').textContent =
+      `${total} word${total !== 1 ? 's' : ''} to study — pick a batch of ${BATCH_SIZE}`;
+
+    const sel = document.getElementById('batch-select');
+    sel.innerHTML = '';
+
+    if (total === 0) {
+      const opt = document.createElement('option');
+      opt.textContent = 'No words match the current filter';
+      sel.appendChild(opt);
+      return;
+    }
+
+    for (let i = 0; i < batches; i++) {
+      const from = i * BATCH_SIZE + 1;
+      const to   = Math.min((i + 1) * BATCH_SIZE, total);
+      const opt  = document.createElement('option');
+      opt.value  = i;
+      opt.textContent = `Batch ${i + 1}  (words ${from}–${to})`;
+      sel.appendChild(opt);
+    }
+  }
+
+  function _mergeStoredRatings(cards, fileName) {
+    const stored = Store.load(fileName);
+    if (Object.keys(stored).length === 0) return cards;
+    return cards.map(c => {
+      const key = c.en + '|' + c.nl;
+      return stored[key] ? { ...c, result: stored[key] } : c;
+    });
+  }
+
+  function loadSample() {
+    _rawText  = SAMPLE_CSV;
+    _fileName = 'dutch_vocab_sample.csv';
+    _isSample = true;
+    const cards = _mergeStoredRatings(parse(SAMPLE_CSV), _fileName);
+    showBatchScreen(cards);
+  }
+
+  function loadFile(file) {
+    _fileName = file.name;
+    _isSample = false;
+    const reader = new FileReader();
+    reader.onload = e => {
+      _rawText = e.target.result;
+      const cards = _mergeStoredRatings(parse(_rawText), _fileName);
+      showBatchScreen(cards);
+    };
+    reader.readAsText(file);
+  }
+
+  function startBatch() {
+    const filtered = _buildBatchOptions(_allCards);
+    if (filtered.length === 0) return;
+    const idx   = parseInt(document.getElementById('batch-select').value, 10);
+    const from  = idx * BATCH_SIZE;
+    const slice = filtered.slice(from, from + BATCH_SIZE);
+    Session.start(slice, _dir, _fileName);
+  }
+
+  function goBackToBatch() {
+    // Re-merge stored ratings so filter counts stay accurate
+    const base  = parse(_rawText || SAMPLE_CSV);
+    _allCards   = _mergeStoredRatings(base, _fileName);
+    _hasResult  = _allCards.some(c => c.result !== '');
+    if (_hasResult) {
+      document.getElementById('filter-row').classList.add('visible');
+    }
+    _rebuildBatchDropdown();
+    Nav.go('batch');
+  }
+
+  // Export the original cards with an updated Result column
+  // Merges all-time stored ratings with current session ratings
+  function downloadWithResults() {
+    const sessionRatings = Session.getRatings();
+    const storedRatings  = Store.load(_fileName);
+    const ratings = Object.assign({}, storedRatings, sessionRatings);
+
+    const lines    = _rawText.trim().split(/\r?\n/);
+
+    // Detect if header already has a Result column
+    const headerCols = parseRow(lines[0]);
+    const hasResult  = headerCols.length >= 5 &&
+      headerCols[4].toLowerCase() === 'result';
+
+    const newHeader = hasResult ? lines[0] : lines[0] + ',Result';
+    const newLines  = [newHeader];
+
+    for (let i = 1; i < lines.length; i++) {
+      if (!lines[i].trim()) continue;
+      const c   = parseRow(lines[i]);
+      const key = (c[0] || '') + '|' + (c[1] || '');
+      const base = [
+        csvCell(c[0] || ''),
+        csvCell(c[1] || ''),
+        csvCell(c[2] || ''),
+        csvCell(c[3] || ''),
+        csvCell(ratings[key] || c[4] || ''),
+      ];
+      newLines.push(base.join(','));
+    }
+
+    const blob = new Blob([newLines.join('\n')], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    const base = _fileName.replace(/\.csv$/i, '');
+    a.download = base + '_results.csv';
+    a.click();
+  }
+
+  // Download a blank template so the user can fill it in
+  function downloadTemplate() {
+    const rows = [
+      'English,Dutch,Example1,Example2',
+      'hello,hallo,"Hallo! Hoe gaat het? (Hello! How are you?)","Ze zei hallo tegen iedereen. (She said hello to everyone.)"',
+      'goodbye,tot ziens,"Tot ziens! We zien elkaar snel. (Goodbye! See you soon.)",',
+      'water,water,,',
+    ];
+    const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'dutch_vocab_template.csv';
+    a.click();
+  }
+
+  return { loadSample, loadFile, downloadTemplate, downloadWithResults, startBatch, setDir, setFilter, goBackToBatch };
+})();
+
+
+/* ══════════════════════════════════════════════════════════
+   SENTENCES — manual CSV examples with AI fallback
+══════════════════════════════════════════════════════════ */
+const Sentences = (() => {
+  const aiCache = {};   // keyed by "en|nl", avoids re-fetching same word
+
+  // Parses "Dutch sentence. (English translation.)" into { nl, en }
+  // Falls back gracefully if the parens pattern isn't present
+  function parseManualCell(raw) {
+    if (!raw) return null;
+    const m = raw.match(/^(.*?)\s*\(([^)]+)\)\s*$/);
+    if (m) return { nl: m[1].trim(), en: m[2].trim() };
+    return { nl: raw, en: '' };   // just show the Dutch, no translation
+  }
+
+  // Collect whichever manual examples exist on the card
+  function getManual(card) {
+    const results = [];
+    const p1 = parseManualCell(card.ex1);
+    const p2 = parseManualCell(card.ex2);
+    if (p1) results.push(p1);
+    if (p2) results.push(p2);
+    return results.length ? results : null;
+  }
+
+  // Call Anthropic API for AI-generated examples
+  async function fetchFromAI(card) {
+    const cacheKey = card.en + '|' + card.nl;
+    if (aiCache[cacheKey]) return aiCache[cacheKey];
+
+    const apiKey = Auth.get();
+    if (!apiKey) throw new Error('No API key set. Tap "Change API key" to add one.');
+
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 400,
+        messages: [{
+          role: 'user',
+          content:
+            `Write 2 short, natural Dutch sentences using the word "${card.nl}" (English: "${card.en}"). ` +
+            `Reply ONLY with a JSON array — no markdown, no backticks:\n` +
+            `[{"nl":"Dutch sentence","en":"English translation"},{"nl":"...","en":"..."}]`
+        }]
+      })
+    });
+
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error.message);
+
+    const text = data.content
+      .filter(b => b.type === 'text')
+      .map(b => b.text)
+      .join('');
+
+    const parsed = JSON.parse(text.trim());
+    aiCache[cacheKey] = parsed;
+    return parsed;
+  }
+
+  // Public: returns { sentences: [{nl, en}], source: 'manual'|'ai' }
+  async function get(card) {
+    const manual = getManual(card);
+    if (manual) return { sentences: manual, source: 'manual' };
+    const ai = await fetchFromAI(card);
+    return { sentences: ai, source: 'ai' };
+  }
+
+  return { get };
+})();
+
+
+/* ══════════════════════════════════════════════════════════
+   SESSION — flashcard game state & rendering
+══════════════════════════════════════════════════════════ */
+const Session = (() => {
+  let queue   = [];
+  let current = 0;
+  let mode    = 'en-nl';   // 'en-nl' | 'nl-en'
+  let flipped = false;
+  let stats   = { correct: 0, hard: 0, wrong: 0 };
+  let ratings = {};   // { "en|nl": 'correct'|'hard'|'wrong' } — last rating per card
+
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  let _fileName = '';   // for localStorage persistence
+
+  // ── Public API ──────────────────────────────────────────
+
+  function start(cards, dir, fileName) {
+    queue     = [...cards];
+    current   = 0;
+    flipped   = false;
+    mode      = dir || 'en-nl';
+    stats     = { correct: 0, hard: 0, wrong: 0 };
+    ratings   = {};
+    _fileName = fileName || '';
+    // Seed ratings from card data (already merged with stored on load)
+    cards.forEach(c => {
+      if (c.result) ratings[c.en + '|' + c.nl] = c.result;
+    });
+    Nav.go('session');
+    renderCard();
+  }
+
+  function cardTap() {
+    if (!flipped) {
+      // First tap: reveal the answer (flip to back)
+      flipped = true;
+      document.getElementById('card-inner').classList.add('flipped');
+      document.getElementById('btn-reveal').textContent = 'Flip';
+      document.getElementById('result-row').classList.add('visible');
+      document.getElementById('sentences-panel').classList.remove('invisible');
+      loadSentences(queue[current]);
+    } else {
+      // Subsequent taps: toggle language (swap front/back content) without losing flipped state
+      mode = mode === 'en-nl' ? 'nl-en' : 'en-nl';
+      const card   = queue[current];
+      const isEnNl = mode === 'en-nl';
+      document.getElementById('front-label').textContent = isEnNl ? 'English' : 'Dutch';
+      document.getElementById('back-label').textContent  = isEnNl ? 'Dutch'   : 'English';
+      document.getElementById('front-word').textContent  = isEnNl ? card.en   : card.nl;
+      document.getElementById('back-word').textContent   = isEnNl ? card.nl   : card.en;
+      // Briefly unflip then reflip so the animation plays
+      const inner = document.getElementById('card-inner');
+      inner.style.transition = 'none';
+      inner.classList.remove('flipped');
+      // Force reflow then re-flip
+      inner.getBoundingClientRect();
+      inner.style.transition = '';
+      inner.classList.add('flipped');
+    }
+  }
+
+  function next() {
+    if (current < queue.length - 1) { current++; renderCard(); }
+  }
+
+  function prev() {
+    if (current > 0) { current--; renderCard(); }
+  }
+
+  function rate(result) {
+    const card = queue[current];
+    ratings[card.en + '|' + card.nl] = result;   // record last rating
+    stats[result]++;
+    // Persist immediately to localStorage
+    if (_fileName) Store.save(_fileName, ratings);
+    if (result === 'wrong') queue.push(queue[current]);   // re-queue for retry
+    current++;
+    renderCard();
+  }
+
+  function getRatings() { return ratings; }
+
+  // ── Private helpers ─────────────────────────────────────
+
+  function renderCard() {
+    if (current >= queue.length) { renderDone(); return; }
+
+    flipped = false;
+    const card  = queue[current];
+    const total = queue.length;
+
+    // Progress
+    document.getElementById('progress-text').textContent =
+      `Card ${current + 1} of ${total}`;
+    document.getElementById('progress-bar').style.width =
+      `${(current / total) * 100}%`;
+
+    // Card content
+    const isEnNl = mode === 'en-nl';
+    document.getElementById('front-label').textContent = isEnNl ? 'English' : 'Dutch';
+    document.getElementById('back-label').textContent  = isEnNl ? 'Dutch'   : 'English';
+    document.getElementById('front-word').textContent  = isEnNl ? card.en   : card.nl;
+    document.getElementById('back-word').textContent   = isEnNl ? card.nl   : card.en;
+
+    // Reset UI state
+    document.getElementById('card-inner').classList.remove('flipped');
+    document.getElementById('btn-reveal').textContent = 'Reveal';
+    document.getElementById('result-row').classList.remove('visible');
+    document.getElementById('sentences-panel').classList.add('invisible');
+    document.getElementById('source-badge').className = 'source-badge';
+    document.getElementById('source-badge').textContent = '';
+    document.getElementById('sentences-body').innerHTML =
+      '<div class="loading-dots"><span></span><span></span><span></span></div>';
+  }
+
+  async function loadSentences(card) {
+    try {
+      const { sentences, source } = await Sentences.get(card);
+      renderSentences(sentences, source);
+    } catch (err) {
+      document.getElementById('sentences-panel').classList.add('invisible');
+    }
+  }
+
+  function renderSentences(sentences, source) {
+    const badge = document.getElementById('source-badge');
+    badge.className = 'source-badge ' + source;
+    badge.textContent = source === 'manual' ? 'your examples' : 'AI generated';
+
+    document.getElementById('sentences-body').innerHTML =
+      sentences.map((s, i) => `
+        ${i > 0 ? '<hr class="sentence-divider">' : ''}
+        <div class="sentence-item">
+          <span class="sentence-nl">${s.nl}</span>
+          ${s.en ? `<span class="sentence-en">${s.en}</span>` : ''}
+        </div>
+      `).join('');
+  }
+
+  function renderDone() {
+    Nav.go('done');
+    const total = stats.correct + stats.hard + stats.wrong;
+    document.getElementById('done-stats').innerHTML =
+      `✓ Got it: <strong>${stats.correct}</strong> &nbsp;` +
+      `~ Hard: <strong>${stats.hard}</strong> &nbsp;` +
+      `✗ Again: <strong>${stats.wrong}</strong><br>` +
+      `Total cards reviewed: ${total}`;
+  }
+
+  return { start, cardTap, next, prev, rate, getRatings };
+})();
+
+
+/* ══════════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════════ */
+document.getElementById('file-input').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (file) CSV.loadFile(file);
+});
+
+Auth.init();
+</script>
+</body>
+</html>
