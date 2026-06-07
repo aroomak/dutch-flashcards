@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>Dutch Flashcards</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/dist/tabler-icons.min.css">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     /* ── Design tokens ─────────────────────────────────────────── */
     :root {
@@ -405,10 +406,21 @@
 
 
   <!-- ══════════════════════════════════════════
+       SCREEN 0 — Loading (auto-fetch)
+  ══════════════════════════════════════════ -->
+  <div id="screen-loading" class="card-surface hidden">
+    <div class="loading-dots" style="justify-content:center;">
+      <span></span><span></span><span></span>
+    </div>
+    <p style="font-size:14px; color:var(--text2); text-align:center;">Loading vocabulary…</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════
        SCREEN 2 — File upload
   ══════════════════════════════════════════ -->
   <div id="screen-upload" class="card-surface hidden">
     <h2>Load vocabulary</h2>
+    <p id="url-error" style="display:none; font-size:13px; color:var(--coral-tx); text-align:center;"></p>
 
     <div id="drop-zone" onclick="document.getElementById('file-input').click()">
       <i class="ti ti-file-text" aria-hidden="true"></i>
@@ -466,7 +478,10 @@
             onclick="CSV.startBatch()">
       Start →
     </button>
-    <button class="btn-ghost" onclick="Nav.go('upload')">← Back</button>
+    <button class="btn-ghost" id="btn-reload-csv" onclick="CSV.loadUrl(CSV_URL)" style="display:none;">
+      <i class="ti ti-refresh"></i> Reload vocabulary
+    </button>
+    <button class="btn-ghost" id="btn-back-upload" onclick="Nav.go('upload')">← Back</button>
   </div>
 
   <!-- ══════════════════════════════════════════
@@ -538,6 +553,11 @@
     <p id="done-saved-note" style="font-size:13px; color:var(--green); display:flex; align-items:center; gap:6px;">
       <i class="ti ti-device-floppy"></i> Ratings saved in your browser
     </p>
+    <button id="btn-save-sheets" class="btn-primary" style="padding:12px 32px; width:100%; display:none;"
+            onclick="CSV.saveToSheets(this)">
+      <i class="ti ti-brand-google"></i> Save results to Google Sheets
+    </button>
+    <p id="sheets-save-status" style="font-size:13px; display:none;"></p>
     <button class="btn-primary" style="padding:12px 32px; width:100%;"
             onclick="CSV.goBackToBatch()">
       Choose another batch
@@ -552,6 +572,30 @@
 
 <script>
 'use strict';
+
+/* ══════════════════════════════════════════════════════════
+   CONFIGURATION — Google Sheets
+   
+   1. Create a Google Sheet with columns:
+        English | Dutch | Example1 | Example2 | Result
+   2. File → Share → Publish to web → Sheet1 → CSV → Publish
+      Copy the URL and paste it as SHEET_CSV_URL below.
+   3. For write-back (saving results): 
+      Go to https://console.cloud.google.com
+        → Create project → Enable "Google Sheets API"
+        → Credentials → OAuth 2.0 Client ID → Web application
+        → Add your GitHub Pages URL to "Authorised JavaScript origins"
+      Copy the Client ID and paste it below.
+      Also paste your Sheet ID (the long string in the sheet URL).
+══════════════════════════════════════════════════════════ */
+const SHEET_CSV_URL  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQyqnHtganE5o2QSLO3426iCQJ4d2d6xTXFh_01KZqYsR8loRd-7qO_nZSvCE0q-m7NnmWAqMjepdRd/pub?gid=737955427&single=true&output=csv';   // publish-to-web CSV URL  (read)
+const GOOGLE_CLIENT_ID = '893136481836-e4dn7q4u5l3fbl8vsgvdt0o5agpsdakh.apps.googleusercontent.com'; // OAuth client ID          (write-back)
+const SHEET_ID       = '1vWOVfsZ2j0Zkq518RW4x-Rui6L0BPkBDTVR895zUuXA';   // Sheet ID from URL         (write-back)
+const SHEET_NAME     = 'Sheet1'; // tab name in your spreadsheet
+
+// Legacy GitHub CSV support — leave empty if using Google Sheets
+const CSV_URL = '';
+
 
 /* ══════════════════════════════════════════════════════════
    SAMPLE DATA
@@ -586,7 +630,7 @@ tear,traan,"Er liep een traan over haar wang. (A tear ran down her cheek.)","Hij
    NAV — screen router
 ══════════════════════════════════════════════════════════ */
 const Nav = (() => {
-  const SCREENS = ['upload', 'batch', 'session', 'done'];
+  const SCREENS = ['loading', 'upload', 'batch', 'session', 'done'];
 
   function go(name) {
     SCREENS.forEach(id => {
@@ -637,6 +681,78 @@ const Store = (() => {
 
 
 /* ══════════════════════════════════════════════════════════
+   GSHEETS — Google Sheets OAuth + write-back
+══════════════════════════════════════════════════════════ */
+const GSheets = (() => {
+  let _accessToken = null;
+
+  // ── Sign in with Google (opens popup) ───────────────────
+  function signIn() {
+    return new Promise((resolve, reject) => {
+      if (!GOOGLE_CLIENT_ID) {
+        reject(new Error('GOOGLE_CLIENT_ID not configured'));
+        return;
+      }
+      // Use Google Identity Services token model
+      const client = google.accounts.oauth2.initTokenClient({
+        client_id: GOOGLE_CLIENT_ID,
+        scope: 'https://www.googleapis.com/auth/spreadsheets',
+        callback: (resp) => {
+          if (resp.error) { reject(new Error(resp.error)); return; }
+          _accessToken = resp.access_token;
+          resolve(_accessToken);
+        },
+      });
+      client.requestAccessToken();
+    });
+  }
+
+  // ── Write all ratings back to the Result column ─────────
+  async function saveRatings(allCards, ratings) {
+    if (!SHEET_ID) throw new Error('SHEET_ID not configured');
+    if (!_accessToken) await signIn();
+
+    // Build the full sheet data: header + one row per card
+    const header = ['English', 'Dutch', 'Example1', 'Example2', 'Result'];
+    const rows   = [header, ...allCards.map(c => {
+      const key = c.en + '|' + c.nl;
+      return [c.en, c.nl, c.ex1, c.ex2, ratings[key] || c.result || ''];
+    })];
+
+    const range = `${SHEET_NAME}!A1`;
+    const url   = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}?valueInputOption=RAW`;
+
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${_accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ range, majorDimension: 'ROWS', values: rows }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      // Token may have expired — clear and retry once
+      if (res.status === 401) {
+        _accessToken = null;
+        await signIn();
+        return saveRatings(allCards, ratings);
+      }
+      throw new Error(err.error?.message || `HTTP ${res.status}`);
+    }
+    return true;
+  }
+
+  function isConfigured() {
+    return !!(GOOGLE_CLIENT_ID && SHEET_ID);
+  }
+
+  return { signIn, saveRatings, isConfigured };
+})();
+
+
+/* ══════════════════════════════════════════════════════════
    AUTH — API key management
 ══════════════════════════════════════════════════════════ */
 const Auth = (() => {
@@ -644,7 +760,12 @@ const Auth = (() => {
   let _key = '';
 
   function init() {
-    Nav.go('upload');
+    const url = SHEET_CSV_URL || CSV_URL;
+    if (url) {
+      CSV.loadUrl(url);
+    } else {
+      Nav.go('upload');
+    }
   }
 
   function save() {
@@ -818,6 +939,11 @@ const CSV = (() => {
     }
 
     _rebuildBatchDropdown();
+
+    // Show reload button if using a URL, back button if using file upload
+    document.getElementById('btn-reload-csv').style.display = CSV_URL ? '' : 'none';
+    document.getElementById('btn-back-upload').style.display = CSV_URL ? 'none' : '';
+
     Nav.go('batch');
   }
 
@@ -857,6 +983,25 @@ const CSV = (() => {
       const key = c.en + '|' + c.nl;
       return stored[key] ? { ...c, result: stored[key] } : c;
     });
+  }
+
+  async function loadUrl(url) {
+    _fileName = url.split('/').pop();   // use filename from URL as storage key
+    _isSample = false;
+    Nav.go('loading');
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      _rawText = await res.text();
+      const cards = _mergeStoredRatings(parse(_rawText), _fileName);
+      showBatchScreen(cards);
+    } catch (err) {
+      console.error('Failed to load CSV from URL:', err);
+      document.getElementById('url-error').textContent =
+        `Could not load vocabulary file: ${err.message}`;
+      document.getElementById('url-error').style.display = 'block';
+      Nav.go('upload');
+    }
   }
 
   function loadSample() {
@@ -942,6 +1087,36 @@ const CSV = (() => {
     a.click();
   }
 
+  async function saveToSheets(btn) {
+    const sessionRatings = Session.getRatings();
+    const storedRatings  = Store.load(_fileName);
+    const ratings = Object.assign({}, storedRatings, sessionRatings);
+
+    const statusEl = document.getElementById('sheets-save-status');
+    btn.disabled   = true;
+    btn.innerHTML  = '<i class="ti ti-loader"></i> Saving…';
+    statusEl.style.display = '';
+    statusEl.style.color   = 'var(--text2)';
+    statusEl.textContent   = 'Signing in to Google…';
+
+    try {
+      await GSheets.saveRatings(_allCards, ratings);
+      // Also persist to localStorage
+      Store.save(_fileName, ratings);
+      btn.innerHTML        = '<i class="ti ti-circle-check"></i> Saved to Google Sheets!';
+      btn.style.background = 'var(--leaf-bg)';
+      btn.style.color      = 'var(--leaf-tx)';
+      statusEl.style.color = 'var(--green)';
+      statusEl.textContent = 'Your Results column has been updated.';
+    } catch (err) {
+      btn.disabled  = false;
+      btn.innerHTML = '<i class="ti ti-brand-google"></i> Save results to Google Sheets';
+      statusEl.style.color = 'var(--coral-tx)';
+      statusEl.textContent = `Error: ${err.message}`;
+      console.error('Sheets save error:', err);
+    }
+  }
+
   // Download a blank template so the user can fill it in
   function downloadTemplate() {
     const rows = [
@@ -957,7 +1132,7 @@ const CSV = (() => {
     a.click();
   }
 
-  return { loadSample, loadFile, downloadTemplate, downloadWithResults, startBatch, setDir, setFilter, goBackToBatch };
+  return { loadUrl, loadSample, loadFile, downloadTemplate, downloadWithResults, saveToSheets, startBatch, setDir, setFilter, goBackToBatch };
 })();
 
 
@@ -1195,6 +1370,21 @@ const Session = (() => {
       `~ Hard: <strong>${stats.hard}</strong> &nbsp;` +
       `✗ Again: <strong>${stats.wrong}</strong><br>` +
       `Total cards reviewed: ${total}`;
+
+    // Show Google Sheets save button only if configured
+    const sheetsBtn = document.getElementById('btn-save-sheets');
+    const statusEl  = document.getElementById('sheets-save-status');
+    if (GSheets.isConfigured()) {
+      sheetsBtn.style.display = '';
+      sheetsBtn.disabled      = false;
+      sheetsBtn.style.background = '';
+      sheetsBtn.style.color      = '';
+      sheetsBtn.innerHTML = '<i class="ti ti-brand-google"></i> Save results to Google Sheets';
+      statusEl.style.display  = 'none';
+      statusEl.textContent    = '';
+    } else {
+      sheetsBtn.style.display = 'none';
+    }
   }
 
   return { start, cardTap, next, prev, rate, getRatings };
