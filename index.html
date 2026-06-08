@@ -151,6 +151,26 @@
     .btn-row { display: flex; gap: 8px; width: 100%; }
     #file-input { display: none; }
 
+    /* ── Screen: Token setup ──────────────────────────────────── */
+    #screen-token {
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    #screen-token h2 { font-size: 18px; font-weight: 500; color: var(--text); }
+    #screen-token p  { font-size: 13px; color: var(--text2); line-height: 1.6; }
+    #screen-token a  { color: var(--green); }
+    #token-input {
+      width: 100%; padding: 11px 12px;
+      font-size: 13px; font-family: monospace;
+      border: 0.5px solid var(--border2); border-radius: var(--r-md);
+      background: var(--bg); color: var(--text);
+      box-sizing: border-box;
+    }
+    #token-input:focus { outline: none; border-color: var(--green); }
+    #token-error { font-size: 12px; color: var(--coral-tx); display: none; }
+
     /* ── Screen: Batch select ─────────────────────────────────── */
     #screen-batch {
       padding: 2rem 1.5rem;
@@ -405,6 +425,30 @@
 
 
   <!-- ══════════════════════════════════════════
+       SCREEN T — GitHub token setup
+  ══════════════════════════════════════════ -->
+  <div id="screen-token" class="card-surface hidden">
+    <i class="ti ti-brand-github" style="font-size:36px; color:var(--green);"></i>
+    <h2>GitHub access token</h2>
+    <p>
+      To load and save your vocabulary, the app needs a
+      Personal Access Token from GitHub.<br><br>
+      <a href="https://github.com/settings/tokens/new?scopes=repo&description=Dutch+Flashcards" target="_blank">
+        → Tap here to create one
+      </a>
+      &nbsp;(tick <strong>repo</strong> scope, set expiry to <strong>No expiration</strong>)
+    </p>
+    <input id="token-input" type="password"
+           placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+           autocomplete="off" autocorrect="off" spellcheck="false">
+    <p id="token-error"></p>
+    <button class="btn-primary" style="width:100%; padding:13px;"
+            onclick="GitHub.saveToken()">
+      Save &amp; connect
+    </button>
+  </div>
+
+  <!-- ══════════════════════════════════════════
        SCREEN 0 — Loading (auto-fetch)
   ══════════════════════════════════════════ -->
   <div id="screen-loading" class="card-surface hidden">
@@ -445,6 +489,12 @@
        SCREEN 2b — Batch selector
   ══════════════════════════════════════════ -->
   <div id="screen-batch" class="card-surface hidden">
+    <div style="width:100%; display:flex; justify-content:flex-end;">
+      <button class="btn-ghost" style="padding:6px 8px; font-size:18px;"
+              onclick="GitHub.changeToken()" title="Change GitHub token">
+        <i class="ti ti-settings"></i>
+      </button>
+    </div>
     <i class="ti ti-layers-subtract" style="font-size:36px; color:var(--green);" aria-hidden="true"></i>
     <h2>Choose a batch</h2>
     <p id="batch-total-label"></p>
@@ -575,22 +625,15 @@
 /* ══════════════════════════════════════════════════════════
    CONFIGURATION — GitHub read + write
    
-   1. Put your vocab.csv in your GitHub repo.
-   2. GITHUB_USER    — your GitHub username
-      GITHUB_REPO    — repository name (e.g. 'dutch-flashcards')
-      GITHUB_FILE    — path to CSV in repo (e.g. 'vocab.csv')
-      GITHUB_BRANCH  — usually 'main'
-   3. Create a Personal Access Token:
-        github.com → Settings → Developer settings
-        → Personal access tokens → Tokens (classic) → Generate new token
-        → Scopes: tick "repo" → Generate → copy the token
-      Paste it as GITHUB_TOKEN below.
+   Fill in your GitHub details below.
+   Your Personal Access Token is NOT stored here —
+   you will enter it once in the app and it is saved
+   securely in your browser's localStorage.
 ══════════════════════════════════════════════════════════ */
 const GITHUB_USER   = 'aroomak';
 const GITHUB_REPO   = 'dutch-flashcards';
 const GITHUB_FILE   = 'vocab.csv';
 const GITHUB_BRANCH = 'main';
-const GITHUB_TOKEN  = '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';   // ghp_xxxxxxxxxxxxxxxxxxxx
 
 
 /* ══════════════════════════════════════════════════════════
@@ -626,7 +669,7 @@ tear,traan,"Er liep een traan over haar wang. (A tear ran down her cheek.)","Hij
    NAV — screen router
 ══════════════════════════════════════════════════════════ */
 const Nav = (() => {
-  const SCREENS = ['loading', 'upload', 'batch', 'session', 'done'];
+  const SCREENS = ['token', 'loading', 'upload', 'batch', 'session', 'done'];
 
   function go(name) {
     SCREENS.forEach(id => {
@@ -678,39 +721,87 @@ const Store = (() => {
 
 /* ══════════════════════════════════════════════════════════
    GITHUB — read CSV + write results back via API
+   Token is stored in localStorage, never in the source file.
 ══════════════════════════════════════════════════════════ */
 const GitHub = (() => {
+  const TOKEN_KEY = 'dutch_fc_github_token';
+
+  function _getToken() {
+    return localStorage.getItem(TOKEN_KEY) || '';
+  }
 
   function _apiUrl() {
     return `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`;
   }
 
   function isConfigured() {
-    return !!(GITHUB_USER && GITHUB_REPO && GITHUB_TOKEN);
+    return !!(GITHUB_USER && GITHUB_REPO && _getToken());
+  }
+
+  // Called from the token screen — validates and saves the token
+  async function saveToken() {
+    const val = document.getElementById('token-input').value.trim();
+    const errEl = document.getElementById('token-error');
+    errEl.style.display = 'none';
+
+    if (!val.startsWith('ghp_') && !val.startsWith('github_pat_')) {
+      errEl.textContent = 'Token should start with ghp_ or github_pat_';
+      errEl.style.display = '';
+      return;
+    }
+
+    // Test the token with a real API call before saving
+    try {
+      const res = await fetch(_apiUrl() + `?ref=${GITHUB_BRANCH}`, {
+        headers: {
+          'Authorization': `token ${val}`,
+          'Accept': 'application/vnd.github.v3+json',
+        },
+      });
+      if (res.status === 401) throw new Error('Token rejected by GitHub (401). Check it was copied correctly.');
+      if (res.status === 404) throw new Error('Repo or file not found. Check GITHUB_USER, GITHUB_REPO, GITHUB_FILE.');
+      if (!res.ok) throw new Error(`GitHub returned HTTP ${res.status}`);
+    } catch (err) {
+      errEl.textContent = err.message;
+      errEl.style.display = '';
+      return;
+    }
+
+    localStorage.setItem(TOKEN_KEY, val);
+    document.getElementById('token-input').value = '';
+    CSV.loadFromGitHub();
+  }
+
+  // Go back to token screen to change the saved token
+  function changeToken() {
+    document.getElementById('token-input').value = '';
+    document.getElementById('token-error').style.display = 'none';
+    Nav.go('token');
   }
 
   // Returns the raw CSV text of the file, plus the SHA needed for updates
   async function fetchCSV() {
+    const token = _getToken();
     const res = await fetch(_apiUrl() + `?ref=${GITHUB_BRANCH}`, {
       headers: {
-        'Authorization': `token ${GITHUB_TOKEN}`,
+        'Authorization': `token ${token}`,
         'Accept': 'application/vnd.github.v3+json',
       },
     });
     if (!res.ok) throw new Error(`GitHub fetch failed: HTTP ${res.status}`);
     const json = await res.json();
-    // Content is base64-encoded
     const text = decodeURIComponent(escape(atob(json.content.replace(/\n/g, ''))));
     return { text, sha: json.sha };
   }
 
-  // Write updated CSV back to GitHub (updates the file in-place)
+  // Write updated CSV back to GitHub
   async function writeCSV(csvText, sha) {
+    const token   = _getToken();
     const encoded = btoa(unescape(encodeURIComponent(csvText)));
     const res = await fetch(_apiUrl(), {
       method: 'PUT',
       headers: {
-        'Authorization': `token ${GITHUB_TOKEN}`,
+        'Authorization': `token ${token}`,
         'Accept': 'application/vnd.github.v3+json',
         'Content-Type': 'application/json',
       },
@@ -728,7 +819,7 @@ const GitHub = (() => {
     return true;
   }
 
-  return { isConfigured, fetchCSV, writeCSV };
+  return { isConfigured, saveToken, changeToken, fetchCSV, writeCSV };
 })();
 
 
@@ -740,10 +831,12 @@ const Auth = (() => {
   let _key = '';
 
   function init() {
-    if (GitHub.isConfigured()) {
+    if (!GITHUB_USER || !GITHUB_REPO) {
+      Nav.go('upload');   // no GitHub config at all — fall back to file upload
+    } else if (GitHub.isConfigured()) {
       CSV.loadFromGitHub();
     } else {
-      Nav.go('upload');
+      Nav.go('token');    // GitHub configured but no token saved yet
     }
   }
 
