@@ -99,7 +99,7 @@ to publish,publiceren,,,
 hat,hoed,,,
 mean,menen,,,
 again,opnieuw,,,
-floor,vloer,,,
+floor,vloer,,,correct
 to send,zenden / verzenden,,,
 to send,sturen / versturen,,,correct
 to share,delen,,,correct
@@ -126,32 +126,32 @@ rongue,tong,,,correct
 profit,winst,,,hard
 corner,hoek,,,correct
 along,langs,,,correct
-good looking,knap,,,
-source,bron,,,
-opportunity,kans,,,
-punishment,straf,,,
-dead,dood,,,
-flat,vlak,,,
-statue,beeld,,,
-pain,pijn,,,
-floor,vloer,,,
-neighborhood,buurt,,,
-to dream,dromen,,,
-bow,boog,,,
-spacious,ruim,,,
-Feeling,gevoel,,,
-Happy,Blij,,,
+good looking,knap,,,hard
+source,bron,,,hard
+opportunity,kans,,,hard
+punishment,straf,,,hard
+dead,dood,,,hard
+flat,vlak,,,hard
+statue,beeld,,,hard
+pain,pijn,,,hard
+floor,vloer,,,correct
+neighborhood,buurt,,,correct
+to dream,dromen,,,hard
+bow,boog,,,hard
+spacious,ruim,,,hard
+Feeling,gevoel,,,correct
+Happy,Blij,,,correct
 For a bit,,,,
-a while,een poos,,,
-vision,visie,,,
-even,zelfs,?,,
-stretch,strekken,,,
-personality,persoonlijkheid,,,
-personally,persoonlijk,,,
-throat,keel,,,
-each,elk,,,
-hole,gat,,,
-wish,wens,,,
+a while,een poos,,,hard
+vision,visie,,,hard
+even,zelfs,?,,correct
+stretch,strekken,,,hard
+personality,persoonlijkheid,,,correct
+personally,persoonlijk,,,correct
+throat,keel,,,hard
+each,elk,,,correct
+hole,gat,,,hard
+wish,wens,,,correct
 mean,gemeen,,,
 farmer,boer,,,
 reason,reden,,,
