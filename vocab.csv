@@ -101,31 +101,31 @@ mean,menen,,,
 again,opnieuw,,,
 floor,vloer,,,
 to send,zenden / verzenden,,,
-to send,sturen / versturen,,,
-to share,delen,,,
-to save,sparen,,,
-to save/to keep,bewaren,,,
-cloud,wolk,,,
-warmth,warmte,,,
-chest,borst,,,
-cool,koel,,,
-battle,slag,,,
-however,toch,,,
-ever,ooit,,,
-never,nooit,,,
-still,nog,,,
-blow,klap,,,
-life,leven,,,
-border,grens,,,
-pattern,patroon,,,
-deep,diep,,,
-flow,stroom,,,
-press,pers,,,
-client,klant,,,
-rongue,tong,,,
-profit,winst,,,
-corner,hoek,,,
-along,langs,,,
+to send,sturen / versturen,,,correct
+to share,delen,,,correct
+to save,sparen,,,hard
+to save/to keep,bewaren,,,hard
+cloud,wolk,,,hard
+warmth,warmte,,,correct
+chest,borst,,,correct
+cool,koel,,,correct
+battle,slag,,,hard
+however,toch,,,hard
+ever,ooit,,,hard
+never,nooit,,,correct
+still,nog,,,correct
+blow,klap,,,hard
+life,leven,,,hard
+border,grens,,,hard
+pattern,patroon,,,hard
+deep,diep,,,correct
+flow,stroom,,,correct
+press,pers,,,hard
+client,klant,,,correct
+rongue,tong,,,correct
+profit,winst,,,hard
+corner,hoek,,,correct
+along,langs,,,correct
 good looking,knap,,,
 source,bron,,,
 opportunity,kans,,,
