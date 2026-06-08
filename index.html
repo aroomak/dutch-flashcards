@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>Dutch Flashcards</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/dist/tabler-icons.min.css">
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     /* ── Design tokens ─────────────────────────────────────────── */
     :root {
@@ -478,7 +477,7 @@
             onclick="CSV.startBatch()">
       Start →
     </button>
-    <button class="btn-ghost" id="btn-reload-csv" onclick="CSV.loadUrl(CSV_URL)" style="display:none;">
+    <button class="btn-ghost" id="btn-reload-csv" onclick="CSV.loadFromGitHub()" style="display:none;">
       <i class="ti ti-refresh"></i> Reload vocabulary
     </button>
     <button class="btn-ghost" id="btn-back-upload" onclick="Nav.go('upload')">← Back</button>
@@ -554,8 +553,8 @@
       <i class="ti ti-device-floppy"></i> Ratings saved in your browser
     </p>
     <button id="btn-save-sheets" class="btn-primary" style="padding:12px 32px; width:100%; display:none;"
-            onclick="CSV.saveToSheets(this)">
-      <i class="ti ti-brand-google"></i> Save results to Google Sheets
+            onclick="CSV.saveToGitHub(this)">
+      <i class="ti ti-brand-github"></i> Save results to GitHub
     </button>
     <p id="sheets-save-status" style="font-size:13px; display:none;"></p>
     <button class="btn-primary" style="padding:12px 32px; width:100%;"
@@ -574,27 +573,24 @@
 'use strict';
 
 /* ══════════════════════════════════════════════════════════
-   CONFIGURATION — Google Sheets
+   CONFIGURATION — GitHub read + write
    
-   1. Create a Google Sheet with columns:
-        English | Dutch | Example1 | Example2 | Result
-   2. File → Share → Publish to web → Sheet1 → CSV → Publish
-      Copy the URL and paste it as SHEET_CSV_URL below.
-   3. For write-back (saving results): 
-      Go to https://console.cloud.google.com
-        → Create project → Enable "Google Sheets API"
-        → Credentials → OAuth 2.0 Client ID → Web application
-        → Add your GitHub Pages URL to "Authorised JavaScript origins"
-      Copy the Client ID and paste it below.
-      Also paste your Sheet ID (the long string in the sheet URL).
+   1. Put your vocab.csv in your GitHub repo.
+   2. GITHUB_USER    — your GitHub username
+      GITHUB_REPO    — repository name (e.g. 'dutch-flashcards')
+      GITHUB_FILE    — path to CSV in repo (e.g. 'vocab.csv')
+      GITHUB_BRANCH  — usually 'main'
+   3. Create a Personal Access Token:
+        github.com → Settings → Developer settings
+        → Personal access tokens → Tokens (classic) → Generate new token
+        → Scopes: tick "repo" → Generate → copy the token
+      Paste it as GITHUB_TOKEN below.
 ══════════════════════════════════════════════════════════ */
-const SHEET_CSV_URL  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQyqnHtganE5o2QSLO3426iCQJ4d2d6xTXFh_01KZqYsR8loRd-7qO_nZSvCE0q-m7NnmWAqMjepdRd/pub?gid=737955427&single=true&output=csv';   // publish-to-web CSV URL  (read)
-const GOOGLE_CLIENT_ID = '893136481836-e4dn7q4u5l3fbl8vsgvdt0o5agpsdakh.apps.googleusercontent.com'; // OAuth client ID          (write-back)
-const SHEET_ID       = '1vWOVfsZ2j0Zkq518RW4x-Rui6L0BPkBDTVR895zUuXA';   // Sheet ID from URL         (write-back)
-const SHEET_NAME     = 'Sheet1'; // tab name in your spreadsheet
-
-// Legacy GitHub CSV support — leave empty if using Google Sheets
-const CSV_URL = '';
+const GITHUB_USER   = 'aroomak';
+const GITHUB_REPO   = 'dutch-flashcards';
+const GITHUB_FILE   = 'vocab.csv';
+const GITHUB_BRANCH = 'main';
+const GITHUB_TOKEN  = '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';   // ghp_xxxxxxxxxxxxxxxxxxxx
 
 
 /* ══════════════════════════════════════════════════════════
@@ -681,74 +677,58 @@ const Store = (() => {
 
 
 /* ══════════════════════════════════════════════════════════
-   GSHEETS — Google Sheets OAuth + write-back
+   GITHUB — read CSV + write results back via API
 ══════════════════════════════════════════════════════════ */
-const GSheets = (() => {
-  let _accessToken = null;
+const GitHub = (() => {
 
-  // ── Sign in with Google (opens popup) ───────────────────
-  function signIn() {
-    return new Promise((resolve, reject) => {
-      if (!GOOGLE_CLIENT_ID) {
-        reject(new Error('GOOGLE_CLIENT_ID not configured'));
-        return;
-      }
-      // Use Google Identity Services token model
-      const client = google.accounts.oauth2.initTokenClient({
-        client_id: GOOGLE_CLIENT_ID,
-        scope: 'https://www.googleapis.com/auth/spreadsheets',
-        callback: (resp) => {
-          if (resp.error) { reject(new Error(resp.error)); return; }
-          _accessToken = resp.access_token;
-          resolve(_accessToken);
-        },
-      });
-      client.requestAccessToken();
-    });
+  function _apiUrl() {
+    return `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`;
   }
 
-  // ── Write all ratings back to the Result column ─────────
-  async function saveRatings(allCards, ratings) {
-    if (!SHEET_ID) throw new Error('SHEET_ID not configured');
-    if (!_accessToken) await signIn();
+  function isConfigured() {
+    return !!(GITHUB_USER && GITHUB_REPO && GITHUB_TOKEN);
+  }
 
-    // Build the full sheet data: header + one row per card
-    const header = ['English', 'Dutch', 'Example1', 'Example2', 'Result'];
-    const rows   = [header, ...allCards.map(c => {
-      const key = c.en + '|' + c.nl;
-      return [c.en, c.nl, c.ex1, c.ex2, ratings[key] || c.result || ''];
-    })];
+  // Returns the raw CSV text of the file, plus the SHA needed for updates
+  async function fetchCSV() {
+    const res = await fetch(_apiUrl() + `?ref=${GITHUB_BRANCH}`, {
+      headers: {
+        'Authorization': `token ${GITHUB_TOKEN}`,
+        'Accept': 'application/vnd.github.v3+json',
+      },
+    });
+    if (!res.ok) throw new Error(`GitHub fetch failed: HTTP ${res.status}`);
+    const json = await res.json();
+    // Content is base64-encoded
+    const text = decodeURIComponent(escape(atob(json.content.replace(/\n/g, ''))));
+    return { text, sha: json.sha };
+  }
 
-    const range = `${SHEET_NAME}!A1`;
-    const url   = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}?valueInputOption=RAW`;
-
-    const res = await fetch(url, {
+  // Write updated CSV back to GitHub (updates the file in-place)
+  async function writeCSV(csvText, sha) {
+    const encoded = btoa(unescape(encodeURIComponent(csvText)));
+    const res = await fetch(_apiUrl(), {
       method: 'PUT',
       headers: {
-        'Authorization': `Bearer ${_accessToken}`,
+        'Authorization': `token ${GITHUB_TOKEN}`,
+        'Accept': 'application/vnd.github.v3+json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ range, majorDimension: 'ROWS', values: rows }),
+      body: JSON.stringify({
+        message: 'Update flashcard results',
+        content: encoded,
+        sha,
+        branch: GITHUB_BRANCH,
+      }),
     });
-
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      // Token may have expired — clear and retry once
-      if (res.status === 401) {
-        _accessToken = null;
-        await signIn();
-        return saveRatings(allCards, ratings);
-      }
-      throw new Error(err.error?.message || `HTTP ${res.status}`);
+      throw new Error(err.message || `GitHub write failed: HTTP ${res.status}`);
     }
     return true;
   }
 
-  function isConfigured() {
-    return !!(GOOGLE_CLIENT_ID && SHEET_ID);
-  }
-
-  return { signIn, saveRatings, isConfigured };
+  return { isConfigured, fetchCSV, writeCSV };
 })();
 
 
@@ -760,9 +740,8 @@ const Auth = (() => {
   let _key = '';
 
   function init() {
-    const url = SHEET_CSV_URL || CSV_URL;
-    if (url) {
-      CSV.loadUrl(url);
+    if (GitHub.isConfigured()) {
+      CSV.loadFromGitHub();
     } else {
       Nav.go('upload');
     }
@@ -940,9 +919,9 @@ const CSV = (() => {
 
     _rebuildBatchDropdown();
 
-    // Show reload button if using a URL, back button if using file upload
-    document.getElementById('btn-reload-csv').style.display = CSV_URL ? '' : 'none';
-    document.getElementById('btn-back-upload').style.display = CSV_URL ? 'none' : '';
+    // Show reload button if using GitHub, back button if using file upload
+    document.getElementById('btn-reload-csv').style.display = GitHub.isConfigured() ? '' : 'none';
+    document.getElementById('btn-back-upload').style.display = GitHub.isConfigured() ? 'none' : '';
 
     Nav.go('batch');
   }
@@ -985,20 +964,22 @@ const CSV = (() => {
     });
   }
 
-  async function loadUrl(url) {
-    _fileName = url.split('/').pop();   // use filename from URL as storage key
+  let _fileSha = '';   // SHA of last-fetched file, needed for GitHub write
+
+  async function loadFromGitHub() {
+    _fileName = GITHUB_FILE.split('/').pop();
     _isSample = false;
     Nav.go('loading');
     try {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      _rawText = await res.text();
+      const { text, sha } = await GitHub.fetchCSV();
+      _rawText  = text;
+      _fileSha  = sha;
       const cards = _mergeStoredRatings(parse(_rawText), _fileName);
       showBatchScreen(cards);
     } catch (err) {
-      console.error('Failed to load CSV from URL:', err);
+      console.error('Failed to load CSV from GitHub:', err);
       document.getElementById('url-error').textContent =
-        `Could not load vocabulary file: ${err.message}`;
+        `Could not load vocabulary from GitHub: ${err.message}`;
       document.getElementById('url-error').style.display = 'block';
       Nav.go('upload');
     }
@@ -1087,7 +1068,7 @@ const CSV = (() => {
     a.click();
   }
 
-  async function saveToSheets(btn) {
+  async function saveToGitHub(btn) {
     const sessionRatings = Session.getRatings();
     const storedRatings  = Store.load(_fileName);
     const ratings = Object.assign({}, storedRatings, sessionRatings);
@@ -1097,23 +1078,50 @@ const CSV = (() => {
     btn.innerHTML  = '<i class="ti ti-loader"></i> Saving…';
     statusEl.style.display = '';
     statusEl.style.color   = 'var(--text2)';
-    statusEl.textContent   = 'Signing in to Google…';
+    statusEl.textContent   = 'Writing to GitHub…';
 
     try {
-      await GSheets.saveRatings(_allCards, ratings);
-      // Also persist to localStorage
+      // Build updated CSV text
+      const normalised = _normalise(_rawText);
+      const lines      = normalised.trim().split('\n');
+      const delim      = _detectDelimiter(lines[0]);
+      const headerCols = parseRow(lines[0], delim);
+      const hasResult  = headerCols.length >= 5 &&
+        headerCols[4].toLowerCase() === 'result';
+      const newHeader  = hasResult ? lines[0] : lines[0] + ',Result';
+      const newLines   = [newHeader];
+      for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+        const c   = parseRow(lines[i], delim);
+        const key = (c[0] || '').trim() + '|' + (c[1] || '').trim();
+        newLines.push([
+          csvCell(c[0] || ''), csvCell(c[1] || ''),
+          csvCell(c[2] || ''), csvCell(c[3] || ''),
+          csvCell(ratings[key] || c[4] || ''),
+        ].join(','));
+      }
+      const updatedCsv = newLines.join('\n');
+
+      // Write to GitHub, get back the new SHA for future writes
+      await GitHub.writeCSV(updatedCsv, _fileSha);
+
+      // Refresh local state
+      _rawText = updatedCsv;
+      const { sha } = await GitHub.fetchCSV();
+      _fileSha = sha;
       Store.save(_fileName, ratings);
-      btn.innerHTML        = '<i class="ti ti-circle-check"></i> Saved to Google Sheets!';
+
+      btn.innerHTML        = '<i class="ti ti-circle-check"></i> Saved to GitHub!';
       btn.style.background = 'var(--leaf-bg)';
       btn.style.color      = 'var(--leaf-tx)';
       statusEl.style.color = 'var(--green)';
-      statusEl.textContent = 'Your Results column has been updated.';
+      statusEl.textContent = 'vocab.csv updated in your repository.';
     } catch (err) {
       btn.disabled  = false;
-      btn.innerHTML = '<i class="ti ti-brand-google"></i> Save results to Google Sheets';
+      btn.innerHTML = '<i class="ti ti-brand-github"></i> Save results to GitHub';
       statusEl.style.color = 'var(--coral-tx)';
       statusEl.textContent = `Error: ${err.message}`;
-      console.error('Sheets save error:', err);
+      console.error('GitHub save error:', err);
     }
   }
 
@@ -1132,7 +1140,7 @@ const CSV = (() => {
     a.click();
   }
 
-  return { loadUrl, loadSample, loadFile, downloadTemplate, downloadWithResults, saveToSheets, startBatch, setDir, setFilter, goBackToBatch };
+  return { loadFromGitHub, loadSample, loadFile, downloadTemplate, downloadWithResults, saveToGitHub, startBatch, setDir, setFilter, goBackToBatch };
 })();
 
 
@@ -1371,15 +1379,15 @@ const Session = (() => {
       `✗ Again: <strong>${stats.wrong}</strong><br>` +
       `Total cards reviewed: ${total}`;
 
-    // Show Google Sheets save button only if configured
+    // Show GitHub save button only if configured
     const sheetsBtn = document.getElementById('btn-save-sheets');
     const statusEl  = document.getElementById('sheets-save-status');
-    if (GSheets.isConfigured()) {
+    if (GitHub.isConfigured()) {
       sheetsBtn.style.display = '';
       sheetsBtn.disabled      = false;
       sheetsBtn.style.background = '';
       sheetsBtn.style.color      = '';
-      sheetsBtn.innerHTML = '<i class="ti ti-brand-google"></i> Save results to Google Sheets';
+      sheetsBtn.innerHTML = '<i class="ti ti-brand-github"></i> Save results to GitHub';
       statusEl.style.display  = 'none';
       statusEl.textContent    = '';
     } else {
