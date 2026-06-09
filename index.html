@@ -151,6 +151,60 @@
     .btn-row { display: flex; gap: 8px; width: 100%; }
     #file-input { display: none; }
 
+    /* ── Screen: User select ──────────────────────────────────── */
+    #screen-user {
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    #screen-user h2 { font-size: 18px; font-weight: 500; color: var(--text); }
+    #screen-user p  { font-size: 13px; color: var(--text2); }
+    #user-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
+    .user-btn {
+      width: 100%;
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 15px;
+      font-family: inherit;
+      border: 0.5px solid var(--border2);
+      border-radius: var(--r-md);
+      background: var(--bg);
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.12s;
+    }
+    .user-btn:active { background: var(--bg2); }
+    .user-btn.active-user {
+      border-color: var(--green);
+      background: var(--green-bg);
+      color: var(--green);
+    }
+    #new-user-row {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+    }
+    #new-user-input {
+      flex: 1;
+      padding: 11px 12px;
+      font-size: 14px;
+      font-family: inherit;
+      border: 0.5px solid var(--border2);
+      border-radius: var(--r-md);
+      background: var(--bg);
+      color: var(--text);
+    }
+    #new-user-input:focus { outline: none; border-color: var(--green); }
+
     /* ── Screen: Token setup ──────────────────────────────────── */
     #screen-token {
       padding: 2rem 1.5rem;
@@ -425,6 +479,24 @@
 
 
   <!-- ══════════════════════════════════════════
+       SCREEN U — User select
+  ══════════════════════════════════════════ -->
+  <div id="screen-user" class="card-surface hidden">
+    <i class="ti ti-users" style="font-size:36px; color:var(--green);"></i>
+    <h2>Who's studying?</h2>
+    <p>Select your name or add a new one.</p>
+    <div id="user-list"></div>
+    <div id="new-user-row">
+      <input id="new-user-input" type="text" placeholder="Add new name…"
+             autocorrect="off" spellcheck="false"
+             onkeydown="if(event.key==='Enter') User.add()">
+      <button class="btn-primary" style="padding:11px 16px;" onclick="User.add()">
+        Add
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
        SCREEN T — GitHub token setup
   ══════════════════════════════════════════ -->
   <div id="screen-token" class="card-surface hidden">
@@ -489,7 +561,11 @@
        SCREEN 2b — Batch selector
   ══════════════════════════════════════════ -->
   <div id="screen-batch" class="card-surface hidden">
-    <div style="width:100%; display:flex; justify-content:flex-end;">
+    <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+      <button class="btn-ghost" style="padding:6px 10px; font-size:13px; gap:6px;"
+              onclick="Nav.go('user')" title="Switch user">
+        <i class="ti ti-user"></i> <span id="batch-username">—</span>
+      </button>
       <button class="btn-ghost" style="padding:6px 8px; font-size:18px;"
               onclick="GitHub.changeToken()" title="Change GitHub token">
         <i class="ti ti-settings"></i>
@@ -669,7 +745,7 @@ tear,traan,"Er liep een traan over haar wang. (A tear ran down her cheek.)","Hij
    NAV — screen router
 ══════════════════════════════════════════════════════════ */
 const Nav = (() => {
-  const SCREENS = ['token', 'loading', 'upload', 'batch', 'session', 'done'];
+  const SCREENS = ['user', 'token', 'loading', 'upload', 'batch', 'session', 'done'];
 
   function go(name) {
     SCREENS.forEach(id => {
@@ -687,15 +763,89 @@ const Nav = (() => {
 
 
 /* ══════════════════════════════════════════════════════════
-   STORE — persist ratings in localStorage, keyed by filename
-   ratings shape: { "en|nl": 'correct'|'hard'|'wrong' }
+   USER — multi-user profiles stored in localStorage
+══════════════════════════════════════════════════════════ */
+const User = (() => {
+  const USERS_KEY  = 'dutch_fc_users';
+  const ACTIVE_KEY = 'dutch_fc_active_user';
+
+  function getAll() {
+    try { return JSON.parse(localStorage.getItem(USERS_KEY) || '[]'); }
+    catch { return []; }
+  }
+
+  function getActive() {
+    return localStorage.getItem(ACTIVE_KEY) || '';
+  }
+
+  function setActive(name) {
+    localStorage.setItem(ACTIVE_KEY, name);
+  }
+
+  function _saveAll(users) {
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  }
+
+  // Render the user list on the user screen
+  function renderScreen() {
+    const users    = getAll();
+    const active   = getActive();
+    const list     = document.getElementById('user-list');
+    list.innerHTML = '';
+
+    users.forEach(name => {
+      const btn = document.createElement('button');
+      btn.className = 'user-btn' + (name === active ? ' active-user' : '');
+      btn.innerHTML = `<i class="ti ti-user"></i> ${name}`;
+      btn.onclick   = () => select(name);
+      list.appendChild(btn);
+    });
+  }
+
+  // Select a user and proceed
+  function select(name) {
+    setActive(name);
+    document.getElementById('batch-username').textContent = name;
+    // Reload cards merged with this user's ratings
+    CSV.reloadForUser();
+  }
+
+  // Add a new user from the input field
+  function add() {
+    const input = document.getElementById('new-user-input');
+    const name  = input.value.trim();
+    if (!name) return;
+    const users = getAll();
+    if (!users.includes(name)) {
+      users.push(name);
+      _saveAll(users);
+    }
+    input.value = '';
+    select(name);
+  }
+
+  // Show user screen, rendering current list
+  function show() {
+    renderScreen();
+    Nav.go('user');
+  }
+
+  return { getActive, getAll, setActive, show, select, add, renderScreen };
+})();
+
+
+/* ══════════════════════════════════════════════════════════
+   STORE — persist ratings in localStorage
+   Key format: dutch_fc_ratings__username__filename
 ══════════════════════════════════════════════════════════ */
 const Store = (() => {
   const PREFIX = 'dutch_fc_ratings__';
 
-  function _key(fileName) { return PREFIX + fileName; }
+  function _key(fileName) {
+    const user = User.getActive() || 'default';
+    return PREFIX + user + '__' + fileName;
+  }
 
-  // Load all saved ratings for a given file
   function load(fileName) {
     try {
       const raw = localStorage.getItem(_key(fileName));
@@ -703,7 +853,6 @@ const Store = (() => {
     } catch { return {}; }
   }
 
-  // Merge + persist a ratings map for a given file
   function save(fileName, ratings) {
     try {
       const existing = load(fileName);
@@ -712,7 +861,6 @@ const Store = (() => {
     } catch (e) { console.warn('localStorage save failed:', e); }
   }
 
-  // Wipe saved ratings for a file
   function clear(fileName) { localStorage.removeItem(_key(fileName)); }
 
   return { load, save, clear };
@@ -832,12 +980,16 @@ const Auth = (() => {
 
   function init() {
     if (!GITHUB_USER || !GITHUB_REPO) {
-      Nav.go('upload');   // no GitHub config at all — fall back to file upload
-    } else if (GitHub.isConfigured()) {
-      CSV.loadFromGitHub();
-    } else {
-      Nav.go('token');    // GitHub configured but no token saved yet
+      // No GitHub config — go straight to user then upload
+      User.show();
+      return;
     }
+    if (!GitHub.isConfigured()) {
+      Nav.go('token');
+      return;
+    }
+    // Token OK — show user screen (it will call CSV.reloadForUser on selection)
+    User.show();
   }
 
   function save() {
@@ -948,8 +1100,16 @@ const CSV = (() => {
 
   function parse(text) {
     text = _normalise(text);
-    const lines = text.trim().split('\n');
-    const delim = _detectDelimiter(lines[0]);
+    const lines  = text.trim().split('\n');
+    const delim  = _detectDelimiter(lines[0]);
+    const header = parseRow(lines[0], delim).map(h => h.toLowerCase());
+
+    // Find this user's result column index (Result_Username or legacy Result)
+    const userName    = User.getActive() || 'default';
+    const userColName = `result_${userName.toLowerCase()}`;
+    let   resultIdx   = header.findIndex(h => h === userColName);
+    if (resultIdx === -1) resultIdx = header.findIndex(h => h === 'result');
+
     const cards = [];
     for (let i = 1; i < lines.length; i++) {
       if (!lines[i].trim()) continue;
@@ -958,16 +1118,17 @@ const CSV = (() => {
       const nl     = c[1] || '';
       const ex1    = c[2] || '';
       const ex2    = c[3] || '';
-      const result = c[4] || '';   // existing Result column if present
+      const result = resultIdx >= 0 ? (c[resultIdx] || '') : '';
       if (en && nl) cards.push({ en, nl, ex1, ex2, result });
     }
     return cards;
   }
 
-  let _allCards  = [];   // full parsed card list
-  let _dir       = 'en-nl';   // 'en-nl' | 'nl-en'
-  let _filter    = 'review';  // 'review' | 'all'
-  let _hasResult = false;     // whether CSV has a Result column
+  let _allCards  = [];
+  let _dir       = 'en-nl';
+  let _filter    = 'review';
+  let _hasResult = false;
+  let _lastBatchIdx = 0;   // remember last selected batch
 
   const BATCH_SIZE = 25;
 
@@ -1012,6 +1173,9 @@ const CSV = (() => {
 
     _rebuildBatchDropdown();
 
+    // Update username label in top bar
+    document.getElementById('batch-username').textContent = User.getActive() || 'Guest';
+
     // Show reload button if using GitHub, back button if using file upload
     document.getElementById('btn-reload-csv').style.display = GitHub.isConfigured() ? '' : 'none';
     document.getElementById('btn-back-upload').style.display = GitHub.isConfigured() ? 'none' : '';
@@ -1020,7 +1184,6 @@ const CSV = (() => {
   }
 
   function _rebuildBatchDropdown() {
-    // Count filtered cards to build accurate batch list
     const filtered = _buildBatchOptions(_allCards);
     const total    = filtered.length;
     const batches  = Math.ceil(total / BATCH_SIZE);
@@ -1046,6 +1209,9 @@ const CSV = (() => {
       opt.textContent = `Batch ${i + 1}  (words ${from}–${to})`;
       sel.appendChild(opt);
     }
+
+    // Restore last selected batch (clamp in case list shrank)
+    sel.value = Math.min(_lastBatchIdx, batches - 1);
   }
 
   function _mergeStoredRatings(cards, fileName) {
@@ -1102,20 +1268,31 @@ const CSV = (() => {
     const filtered = _buildBatchOptions(_allCards);
     if (filtered.length === 0) return;
     const idx   = parseInt(document.getElementById('batch-select').value, 10);
+    _lastBatchIdx = idx;   // remember for when we come back
     const from  = idx * BATCH_SIZE;
     const slice = filtered.slice(from, from + BATCH_SIZE);
     Session.start(slice, _dir, _fileName);
   }
 
+  // Re-merge cards with the newly selected user's ratings and show batch screen
+  function reloadForUser() {
+    if (_rawText) {
+      const cards = _mergeStoredRatings(parse(_rawText), _fileName);
+      showBatchScreen(cards);
+    } else if (GitHub.isConfigured()) {
+      CSV.loadFromGitHub();
+    } else {
+      Nav.go('upload');
+    }
+  }
+
   function goBackToBatch() {
-    // Re-merge stored ratings so filter counts stay accurate
+    // Re-merge stored ratings (current user) so filter counts stay accurate
     const src   = _rawText || SAMPLE_CSV;
-    const base  = parse(src);   // parse() now normalises internally
+    const base  = parse(src);
     _allCards   = _mergeStoredRatings(base, _fileName);
     _hasResult  = _allCards.some(c => c.result !== '');
-    if (_hasResult) {
-      document.getElementById('filter-row').classList.add('visible');
-    }
+    if (_hasResult) document.getElementById('filter-row').classList.add('visible');
     _rebuildBatchDropdown();
     Nav.go('batch');
   }
@@ -1162,9 +1339,10 @@ const CSV = (() => {
   }
 
   async function saveToGitHub(btn) {
+    const userName       = User.getActive() || 'default';
     const sessionRatings = Session.getRatings();
     const storedRatings  = Store.load(_fileName);
-    const ratings = Object.assign({}, storedRatings, sessionRatings);
+    const ratings        = Object.assign({}, storedRatings, sessionRatings);
 
     const statusEl = document.getElementById('sheets-save-status');
     btn.disabled   = true;
@@ -1174,31 +1352,36 @@ const CSV = (() => {
     statusEl.textContent   = 'Writing to GitHub…';
 
     try {
-      // Build updated CSV text
       const normalised = _normalise(_rawText);
       const lines      = normalised.trim().split('\n');
       const delim      = _detectDelimiter(lines[0]);
       const headerCols = parseRow(lines[0], delim);
-      const hasResult  = headerCols.length >= 5 &&
-        headerCols[4].toLowerCase() === 'result';
-      const newHeader  = hasResult ? lines[0] : lines[0] + ',Result';
-      const newLines   = [newHeader];
+
+      // Find or create a column for this user: "Result_Username"
+      const userCol    = `Result_${userName}`;
+      let   userColIdx = headerCols.findIndex(h => h.toLowerCase() === userCol.toLowerCase());
+      if (userColIdx === -1) {
+        userColIdx = headerCols.length;   // append new column
+        headerCols.push(userCol);
+      }
+
+      const newHeader = headerCols.map(csvCell).join(',');
+      const newLines  = [newHeader];
+
       for (let i = 1; i < lines.length; i++) {
         if (!lines[i].trim()) continue;
         const c   = parseRow(lines[i], delim);
         const key = (c[0] || '').trim() + '|' + (c[1] || '').trim();
-        newLines.push([
-          csvCell(c[0] || ''), csvCell(c[1] || ''),
-          csvCell(c[2] || ''), csvCell(c[3] || ''),
-          csvCell(ratings[key] || c[4] || ''),
-        ].join(','));
+        // Pad row to at least userColIdx + 1 columns
+        while (c.length <= userColIdx) c.push('');
+        c[userColIdx] = ratings[key] || c[userColIdx] || '';
+        newLines.push(c.map(csvCell).join(','));
       }
       const updatedCsv = newLines.join('\n');
 
-      // Write to GitHub, get back the new SHA for future writes
       await GitHub.writeCSV(updatedCsv, _fileSha);
 
-      // Refresh local state
+      // Refresh local raw text + SHA
       _rawText = updatedCsv;
       const { sha } = await GitHub.fetchCSV();
       _fileSha = sha;
@@ -1208,7 +1391,7 @@ const CSV = (() => {
       btn.style.background = 'var(--leaf-bg)';
       btn.style.color      = 'var(--leaf-tx)';
       statusEl.style.color = 'var(--green)';
-      statusEl.textContent = 'vocab.csv updated in your repository.';
+      statusEl.textContent = `Column "${userCol}" updated in vocab.csv.`;
     } catch (err) {
       btn.disabled  = false;
       btn.innerHTML = '<i class="ti ti-brand-github"></i> Save results to GitHub';
@@ -1233,7 +1416,7 @@ const CSV = (() => {
     a.click();
   }
 
-  return { loadFromGitHub, loadSample, loadFile, downloadTemplate, downloadWithResults, saveToGitHub, startBatch, setDir, setFilter, goBackToBatch };
+  return { loadFromGitHub, reloadForUser, loadSample, loadFile, downloadTemplate, downloadWithResults, saveToGitHub, startBatch, setDir, setFilter, goBackToBatch };
 })();
 
 
