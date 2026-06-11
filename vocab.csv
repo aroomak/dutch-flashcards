@@ -177,25 +177,25 @@ oil,olie,,,,wrong
 debt,schuld,,,,hard
 fun,leuk,,,,hard
 pleasure,plezier,,,,
-risk,risico,,,,
-most preferably,het liefst,,,,
-island,eiland,,,,
+risk,risico,,,,correct
+most preferably,het liefst,,,,hard
+island,eiland,,,,correct
 pass,passeren,,,,
 series,reeks,,,,
-away,weg,,,,
+away,weg,,,,correct
 low,laag,,,,
-high,hoog,,,,
-cross,kruis,,,,
+high,hoog,,,,correct
+cross,kruis,,,,correct
 matter,,,,,
-tight,strak,,,,
-master,meester,,,,
-doctor - GP,huisarts,,,,
-to fight,vechten,,,,
+tight,strak,,,,hard
+master,meester,,,,correct
+doctor - GP,huisarts,,,,correct
+to fight,vechten,,,,hard
 wet,Nat,,,,
 just,net,,,,
-mess,troep,,,,
-hungry,honger,,,,
-hungry,Trekken,,,,
+mess,troep,,,,hard
+hungry,honger,,,,correct
+hungry,Trekken,,,,correct
 quiet,stil,,,,
 away,heen,,,,
 role,rol,,,,
