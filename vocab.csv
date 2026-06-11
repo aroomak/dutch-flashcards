@@ -155,7 +155,7 @@ wish,wens,,,correct,correct
 mean,gemeen,,,,
 farmer,boer,,,,
 reason,reden,,,,
-law,wet,,,,
+law,wet,,,,hard
 mathematics,wiskunde,,,,
 wave,golf,,,,
 wide,wijd,,,,
@@ -163,19 +163,19 @@ to grow,groeien,,,,
 grow,groei,,,,
 body,lichaam,,,,
 a couple,een paar,,,,
-fear,angst,,,,
+fear,angst,,,,hard
 afraid,bang,,,,
 complaint,klacht,,,,
 endless,eindeloos,,,,
 emotional,emotioneel,,,,
-to be interested,interesseren,,,,
-sky,lucht,,,,
-often,vaak,,,,
-to study,studeren,,,,
-oil,olie,,,,
+to be interested,interesseren,,,,correct
+sky,lucht,,,,correct
+often,vaak,,,,correct
+to study,studeren,,,,correct
+oil,olie,,,,wrong
 (x) times,keer,,,,
-debt,schuld,,,,
-fun,leuk,,,,
+debt,schuld,,,,hard
+fun,leuk,,,,hard
 pleasure,plezier,,,,
 risk,risico,,,,
 most preferably,het liefst,,,,
