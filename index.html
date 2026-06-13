@@ -362,6 +362,28 @@
     .card-word  { font-size: 32px; font-weight: 500; color: var(--text); text-align: center; }
     .card-hint  { font-size: 13px; color: var(--text3); margin-top: 4px; }
 
+    /* Speaker button — below the card, shown when Dutch is visible */
+    #btn-speaker {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 0.5px solid var(--border2);
+      background: var(--bg2);
+      color: var(--text2);
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s, transform 0.1s;
+      touch-action: none;
+      user-select: none;
+    }
+    #btn-speaker:active,
+    #btn-speaker.playing { background: var(--green-bg); color: var(--green); transform: scale(1.1); }
+    #btn-speaker.missing { opacity: .3; cursor: default; }
+    #btn-speaker.hidden-btn { visibility: hidden; pointer-events: none; }
+
     /* Example sentences */
     #sentences-panel {
       border-radius: var(--r-lg);
@@ -635,6 +657,18 @@
           <span class="card-hint">tap to flip back</span>
         </div>
       </div>
+    </div>
+
+    <!-- Speaker button — shown when Dutch face is visible -->
+    <div id="speaker-row" style="display:flex; justify-content:center; margin-top:-6px; min-height:40px;">
+      <button id="btn-speaker"
+              onmousedown="Audio.play(event)"  ontouchstart="Audio.play(event)"
+              onmouseup="Audio.stop()"         ontouchend="Audio.stop()"
+              onmouseleave="Audio.stop()"
+              onclick="event.stopPropagation()"
+              title="Hold to listen">
+        <i class="ti ti-volume" aria-hidden="true"></i>
+      </button>
     </div>
 
     <div id="sentences-panel" class="invisible">
@@ -968,6 +1002,76 @@ const GitHub = (() => {
   }
 
   return { isConfigured, saveToken, changeToken, fetchCSV, writeCSV };
+})();
+
+
+/* ══════════════════════════════════════════════════════════
+   AUDIO — press-and-hold pronunciation via GitHub-hosted mp3s
+   Files expected at: audio/{dutch_word}.mp3
+   Word is lowercased, spaces → underscores.
+══════════════════════════════════════════════════════════ */
+const Audio = (() => {
+  let _current = null;   // active HTMLAudioElement
+  let _nlWord  = '';     // current Dutch word
+
+  function _toFilename(nl) {
+    return nl.toLowerCase()
+             .replace(/\s+/g, '_')
+             .replace(/[^a-z0-9_\-]/g, '') + '.mp3';
+  }
+
+  function _audioUrl(nl) {
+    return `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/audio/${_toFilename(nl)}`;
+  }
+
+  // Called by renderCard to tell Audio which word is on deck
+  function setWord(nl) {
+    _nlWord = nl;
+    stop();
+    const btn = document.getElementById('btn-speaker');
+    if (!btn) return;
+    btn.classList.remove('missing', 'playing');
+  }
+
+  function play(e) {
+    e.stopPropagation();
+    if (!_nlWord || !GITHUB_USER) return;
+    stop();
+    const btn = document.getElementById('btn-speaker');
+    _current  = new window.Audio(_audioUrl(_nlWord));
+
+    _current.addEventListener('canplay', () => {
+      btn.classList.add('playing');
+      btn.classList.remove('missing');
+      _current.play();
+    });
+
+    _current.addEventListener('ended', () => {
+      btn.classList.remove('playing');
+      _current = null;
+    });
+
+    _current.addEventListener('error', () => {
+      // File not found or network error — dim the button
+      btn.classList.add('missing');
+      btn.classList.remove('playing');
+      _current = null;
+    });
+
+    _current.load();
+  }
+
+  function stop() {
+    if (_current) {
+      _current.pause();
+      _current.currentTime = 0;
+      _current = null;
+    }
+    const btn = document.getElementById('btn-speaker');
+    if (btn) btn.classList.remove('playing');
+  }
+
+  return { setWord, play, stop };
 })();
 
 
@@ -1547,6 +1651,10 @@ const Session = (() => {
       document.getElementById('btn-reveal').textContent = 'Flip';
       document.getElementById('result-row').classList.add('visible');
       document.getElementById('sentences-panel').classList.remove('invisible');
+      // Show speaker button now that Dutch face is visible (en-nl mode)
+      if (mode === 'en-nl') {
+        document.getElementById('btn-speaker').classList.remove('hidden-btn');
+      }
       loadSentences(queue[current]);
     } else {
       // Subsequent taps: toggle language (swap front/back content) without losing flipped state
@@ -1610,6 +1718,16 @@ const Session = (() => {
     document.getElementById('back-label').textContent  = isEnNl ? 'Dutch'   : 'English';
     document.getElementById('front-word').textContent  = isEnNl ? card.en   : card.nl;
     document.getElementById('back-word').textContent   = isEnNl ? card.nl   : card.en;
+
+    // Speaker button: visible in nl-en mode immediately (Dutch is front),
+    // or in en-nl mode only after flip (Dutch is back)
+    const btn = document.getElementById('btn-speaker');
+    if (!isEnNl) {
+      btn.classList.remove('hidden-btn');  // Dutch is front — show right away
+    } else {
+      btn.classList.add('hidden-btn');     // Dutch is back — hide until flipped
+    }
+    Audio.setWord(card.nl);
 
     // Reset UI state
     document.getElementById('card-inner').classList.remove('flipped');
