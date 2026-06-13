@@ -203,34 +203,34 @@ target,doel,,,,
 path,pad,,,,
 fulfill,vervullen,,,,
 neck,hals,,,,hard
-right (correct),juist,,,,
-right (direction),recht,,,,
-left,links,,,,
+right (correct),juist,,,,hard
+right (direction),recht,,,,correct
+left,links,,,,correct
 kind,,,,,
-shift,dients,,,,
+shift,dients,,,,hard
 to influence,beinvloeden,,,,
 dumb,dom,,,,
 knife,mes,,,,
-discuss,bespreken,,,,
-discussion,discussie,,,,
-to flee,vluchten,,,,
-edge,rand,,,,
-measure,maat,,,,
-strict,streng,,,,
-true,oprecht,,,,
-false,onecht,,,,
-star,ster,,,,
-to climb,klimmen,,,,
+discuss,bespreken,,,,hard
+discussion,discussie,,,,correct
+to flee,vluchten,,,,correct
+edge,rand,,,,hard
+measure,maat,,,,hard
+strict,streng,,,,hard
+true,oprecht,,,,hard
+false,onecht,,,,hard
+star,ster,,,,hard
+to climb,klimmen,,,,hard
 peace,,,,,
-to deliver,leveren,,,,
-tired,moe,,,,
-mostly,meestal,,,,
-typical,typisch,,,,
-circle,kring,,,,
-formation,vorming,,,,
+to deliver,leveren,,,,hard
+tired,moe,,,,hard
+mostly,meestal,,,,hard
+typical,typisch,,,,hard
+circle,kring,,,,hard
+formation,vorming,,,,hard
 faith,,,,,
-stomach,maag,,,,
-branch,tak,,,,
+stomach,maag,,,,hard
+branch,tak,,,,hard
 fact,feit,,,,
 people,volk,,,,
 sentence,zin,,,,
@@ -279,7 +279,7 @@ Movement,Beweging,,,,
 Probability,Waarschijnlijk,,,,
 Attention,Aandacht,,,,
 War,Oorlog,,,,
-mostly,meestal,,,,
+mostly,meestal,,,,hard
 Barely,Nauwelijks,,,,
 Suddenly,Plotseling,,,,
 Indeed,Inderdaad,,,,
