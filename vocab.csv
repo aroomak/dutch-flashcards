@@ -1,29 +1,29 @@
 English,Dutch,Example1,Example2,Result,Result_Ar
-fact,feit,Dat is een bekend feit.,That is a well-known fact.,,
-to wish,wensen,Ik wens je een fijne dag.,I wish you a nice day.,,
-demand,eis,Dat is een belangrijke eis.,That is an important demand.,,
+fact,feit,Dat is een bekend feit.,That is a well-known fact.,,hard
+to wish,wensen,Ik wens je een fijne dag.,I wish you a nice day.,,correct
+demand,eis,Dat is een belangrijke eis.,That is an important demand.,,hard
 influence,invloed,Hij heeft veel invloed op mij.,He has a lot of influence on me.,,
-fixed,vast,Ik heb een vaste baan.,I have a permanent job.,,
-region,streek,Deze streek is heel mooi.,This region is very beautiful.,,
-leadership,leiding,Zij heeft de leiding.,She is in charge.,,
-hall,zaal,De zaal is groot.,The hall is big.,,
-advice,raad,Ik geef je een goede raad.,I give you good advice.,,
-early,vroeg,Ik sta vroeg op.,I get up early.,,
-son,zoon,Hun zoon is tien jaar oud.,Their son is ten years old.,,
-thin,dun,Het ijs is heel dun.,The ice is very thin.,,
-thick - fat,dik,Het boek is erg dik.,The book is very thick.,,
-taste,smaak,Deze soep heeft een lekkere smaak.,This soup has a nice taste.,,
-smell,geur,Ik ruik een lekkere geur.,I smell a nice scent.,,
-busy,bezig,Ik ben bezig met mijn werk.,I am busy with my work.,,
-busy,druk,Het is erg druk in de stad.,It is very busy in the city.,,
-coast,kust,We wonen aan de kust.,We live on the coast.,,
-bottom,bodem,De sleutel ligt op de bodem.,The key is on the bottom.,,
-tear,traan,Er rolde een traan over haar wang.,A tear rolled down her cheek.,,
-to keep,houden,Mag ik dit houden?,May I keep this?,,
-realize,realizeren,Ik realiseer me dat het laat is.,I realize that it is late.,,
-voice,stem,Zij heeft een mooie stem.,She has a beautiful voice.,,
-such as,zolas,"Ik hou van fruit, zoals appels.","I like fruit, such as apples.",,
-cultural,cultureel,Het is een cultureel festival.,It is a cultural festival.,,
+fixed,vast,Ik heb een vaste baan.,I have a permanent job.,,hard
+region,streek,Deze streek is heel mooi.,This region is very beautiful.,,hard
+leadership,leiding,Zij heeft de leiding.,She is in charge.,,correct
+hall,zaal,De zaal is groot.,The hall is big.,,correct
+advice,raad,Ik geef je een goede raad.,I give you good advice.,,hard
+early,vroeg,Ik sta vroeg op.,I get up early.,,correct
+son,zoon,Hun zoon is tien jaar oud.,Their son is ten years old.,,correct
+thin,dun,Het ijs is heel dun.,The ice is very thin.,,correct
+thick - fat,dik,Het boek is erg dik.,The book is very thick.,,correct
+taste,smaak,Deze soep heeft een lekkere smaak.,This soup has a nice taste.,,correct
+smell,geur,Ik ruik een lekkere geur.,I smell a nice scent.,,correct
+busy,bezig,Ik ben bezig met mijn werk.,I am busy with my work.,,correct
+busy,druk,Het is erg druk in de stad.,It is very busy in the city.,,correct
+coast,kust,We wonen aan de kust.,We live on the coast.,,correct
+bottom,bodem,De sleutel ligt op de bodem.,The key is on the bottom.,,correct
+tear,traan,Er rolde een traan over haar wang.,A tear rolled down her cheek.,,correct
+to keep,houden,Mag ik dit houden?,May I keep this?,,correct
+realize,realizeren,Ik realiseer me dat het laat is.,I realize that it is late.,,correct
+voice,stem,Zij heeft een mooie stem.,She has a beautiful voice.,,correct
+such as,zolas,"Ik hou van fruit, zoals appels.","I like fruit, such as apples.",,correct
+cultural,cultureel,Het is een cultureel festival.,It is a cultural festival.,,correct
 side,kant,Het ligt aan de andere kant.,It is on the other side.,correct,
 track,spoor,De trein staat op spoor twee.,The train is on track two.,correct,
 wide,breed,De rivier is heel breed.,The river is very wide.,hard,
@@ -65,7 +65,7 @@ to forbid,verbieden,Mijn ouders verbieden dat.,My parents forbid that.,,
 to allow,toelaten,Ze laten geen honden toe.,They do not allow dogs.,,
 field,veld,De koeien staan in het veld.,The cows are in the field.,,
 soon,gauw,Ik kom gauw terug.,I will come back soon.,,
-early,vroeg,Het is nog vroeg.,It is still early.,,
+early,vroeg,Het is nog vroeg.,It is still early.,,correct
 late,laat,Sorry dat ik te laat ben.,Sorry that I am late.,,
 guest,gast,We hebben een gast vanavond.,We have a guest tonight.,,
 some,sommige,Sommige mensen houden van thee.,Some people like tea.,,
@@ -231,7 +231,7 @@ formation,vorming,De vorming van wolken is interessant.,The formation of clouds 
 faith,vertrouwen,Ik heb vertrouwen in jou.,I have faith in you.,,
 stomach,maag,Mijn maag is leeg.,My stomach is empty.,,hard
 branch,tak,De vogel zit op een tak.,The bird sits on a branch.,,hard
-fact,feit,Het is een feit dat water nat is.,It is a fact that water is wet.,,
+fact,feit,Het is een feit dat water nat is.,It is a fact that water is wet.,,hard
 people,volk,Het Nederlandse volk is aardig.,The Dutch people are kind.,,
 sentence,zin,Maak een zin met dit woord.,Make a sentence with this word.,,
 rush,haast,Ik heb haast.,I am in a hurry.,,
