@@ -176,17 +176,17 @@ oil,olie,Ik doe olie in de pan.,I put oil in the pan.,,wrong
 (x) times,keer,Ik ben er drie keer geweest.,I have been there three times.,,
 debt,schuld,Hij heeft veel schuld.,He has a lot of debt.,,hard
 fun,leuk,Het was een leuk feest.,It was a fun party.,,hard
-pleasure,plezier,Veel plezier!,Have fun!,,
+pleasure,plezier,Veel plezier!,Have fun!,,hard
 risk,risico,Dat is een groot risico.,That is a big risk.,,correct
 most preferably,het liefst,Het liefst blijf ik thuis.,I would most prefer to stay home.,,correct
 island,eiland,We gaan naar een klein eiland.,We are going to a small island.,,correct
 pass,passeren,We passeren de brug.,We pass the bridge.,,correct
-series,reeks,Ik kijk een nieuwe reeks.,I am watching a new series.,,hard
+series,reeks,Ik kijk een nieuwe reeks.,I am watching a new series.,,correct
 away,weg,Mijn sleutels zijn weg.,My keys are gone.,,correct
-low,laag,De prijs is laag.,The price is low.,,
+low,laag,De prijs is laag.,The price is low.,,correct
 high,hoog,De berg is heel hoog.,The mountain is very high.,,correct
 cross,kruis,Er staat een kruis op de kaart.,There is a cross on the map.,,correct
-matter,zaak,Dat is een andere zaak.,That is a different matter.,,
+matter,zaak,Dat is een andere zaak.,That is a different matter.,,correct
 tight,strak,De broek zit te strak.,The trousers are too tight.,,hard
 master,meester,Hij is een meester in koken.,He is a master at cooking.,,correct
 doctor - GP,huisarts,Ik ga naar de huisarts.,I am going to the doctor.,,correct
@@ -196,10 +196,10 @@ just,net,Ik ben net thuis.,I just got home.,,hard
 mess,troep,Wat een troep in je kamer!,What a mess in your room!,,hard
 hungry,honger,Ik heb honger.,I am hungry.,,correct
 hungry,Trekken,Ik heb trek in iets lekkers.,I feel like eating something tasty.,,correct
-quiet,stil,"Wees stil, alsjeblieft.","Be quiet, please.",,hard
+quiet,stil,"Wees stil, alsjeblieft.","Be quiet, please.",,correct
 away,heen,Waar ga je heen?,Where are you going?,,hard
-role,rol,Hij speelt een belangrijke rol.,He plays an important role.,,
-target,doel,Mijn doel is om Nederlands te leren.,My goal is to learn Dutch.,,hard
+role,rol,Hij speelt een belangrijke rol.,He plays an important role.,,correct
+target,doel,Mijn doel is om Nederlands te leren.,My goal is to learn Dutch.,,correct
 path,pad,We lopen over het pad.,We walk along the path.,,
 fulfill,vervullen,Ik wil mijn droom vervullen.,I want to fulfill my dream.,,
 neck,hals,Ze draagt een ketting om haar hals.,She wears a necklace around her neck.,,hard
