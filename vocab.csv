@@ -71,7 +71,7 @@ guest,gast,We hebben een gast vanavond.,We have a guest tonight.,,
 some,sommige,Sommige mensen houden van thee.,Some people like tea.,,
 sometimes,soms,Soms ga ik naar de film.,Sometimes I go to the movies.,,
 to bring,brengen,Ik breng je naar huis.,I will bring you home.,,
-,krijgen,Ik krijg een cadeau.,I get a present.,,
+to get,krijgen,Ik krijg een cadeau.,I get a present.,,
 stomach,buik,Ik heb pijn in mijn buik.,I have pain in my stomach.,,
 back,rug,Mijn rug doet pijn.,My back hurts.,,
 back [again],terug,Ik kom zo terug.,I will be back soon.,,
@@ -217,8 +217,8 @@ to flee,vluchten,De mensen vluchten voor de oorlog.,The people flee from the war
 edge,rand,Hij zit op de rand van het bed.,He sits on the edge of the bed.,,hard
 measure,maat,Welke maat heb je?,What size are you?,,correct
 strict,streng,De leraar is heel streng.,The teacher is very strict.,,hard
-TRUE,oprecht,Hij is een oprecht persoon.,He is a sincere person.,,hard
-FALSE,onecht,Dit is een onechte diamant.,This is a fake diamond.,,hard
+True,oprecht,Hij is een oprecht persoon.,He is a sincere person.,,hard
+Fale,onecht,Dit is een onechte diamant.,This is a fake diamond.,,hard
 star,ster,De sterren zijn mooi vannacht.,The stars are beautiful tonight.,,correct
 to climb,klimmen,De kinderen klimmen in de boom.,The children climb in the tree.,,hard
 peace,vrede,Iedereen wil vrede.,Everyone wants peace.,,hard
@@ -347,3 +347,14 @@ To put down,Neerleggen,Leg het boek neer.,Put the book down.,,
 To put down,Neerzetten,Zet de tas hier neer.,Put the bag down here.,,
 To handle,Omgaan met,Hij kan goed met kinderen omgaan.,He is good with children.,,
 To write down,Opschrijven,Schrijf je adres op.,Write down your address.,,
+Company,Bedrijf,,,,
+Canoeing,Kanovaren,,,,
+We recommend,we raden aan om,,,,
+participate,maedoen,,,,
+take a long,meenemen,,,,
+to register,aanmelden,,,,
+Set up - Establish,opgericht,,,,
+Suitable,geschikt,,,,
+resuscitate,reanimeren,,,,
+Meeting - Gathering,bijeenkomst,,,,
+Broken items,kapotte spullen,,,,
