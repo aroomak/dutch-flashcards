@@ -251,12 +251,12 @@ According to,Volgens,Volgens mij is het waar.,"According to me, it is true.",,ha
 Little,klein,Het is een klein huis.,It is a small house.,,correct
 The same,Dezelfde,We hebben dezelfde jas.,We have the same coat.,,correct
 Whole,Geheel,Het gehele dorp was er.,The whole village was there.,,
-For example,Bijvoorbeeld,"Ik hou van fruit, bijvoorbeeld appels.","I like fruit, for example apples.",,
-Replace,Vervangen,Ik moet de lamp vervangen.,I have to replace the lamp.,,
+For example,Bijvoorbeeld,"Ik hou van fruit, bijvoorbeeld appels.","I like fruit, for example apples.",,wrong
+Replace,Vervangen,Ik moet de lamp vervangen.,I have to replace the lamp.,,hard
 With this,Hiermee,Hiermee ben ik klaar.,With this I am done.,,
-Component,Onderdeel,Dit is een belangrijk onderdeel.,This is an important component.,,
-Invent,Uitvinden,Wie heeft de telefoon uitgevonden?,Who invented the telephone?,,
-Development,Ontwikkeling,De ontwikkeling gaat snel.,The development is going fast.,,
+Component,Onderdeel,Dit is een belangrijk onderdeel.,This is an important component.,,hard
+Invent,Uitvinden,Wie heeft de telefoon uitgevonden?,Who invented the telephone?,,wrong
+Development,Ontwikkeling,De ontwikkeling gaat snel.,The development is going fast.,,hard
 That much,Zoveel,Ik heb zoveel werk.,I have so much work.,,
 Upstairs,Boven,Mijn kamer is boven.,My room is upstairs.,,
 Downstairs,Beneden,De keuken is beneden.,The kitchen is downstairs.,,
