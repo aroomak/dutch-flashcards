@@ -250,35 +250,35 @@ After that,Daarna,"Eerst eten we, daarna gaan we.","First we eat, after that we 
 According to,Volgens,Volgens mij is het waar.,"According to me, it is true.",,hard
 Little,klein,Het is een klein huis.,It is a small house.,,correct
 The same,Dezelfde,We hebben dezelfde jas.,We have the same coat.,,correct
-Whole,Geheel,Het gehele dorp was er.,The whole village was there.,,
-For example,Bijvoorbeeld,"Ik hou van fruit, bijvoorbeeld appels.","I like fruit, for example apples.",,wrong
+Whole,Geheel,Het gehele dorp was er.,The whole village was there.,,correct
+For example,Bijvoorbeeld,"Ik hou van fruit, bijvoorbeeld appels.","I like fruit, for example apples.",,hard
 Replace,Vervangen,Ik moet de lamp vervangen.,I have to replace the lamp.,,hard
-With this,Hiermee,Hiermee ben ik klaar.,With this I am done.,,
+With this,Hiermee,Hiermee ben ik klaar.,With this I am done.,,hard
 Component,Onderdeel,Dit is een belangrijk onderdeel.,This is an important component.,,hard
-Invent,Uitvinden,Wie heeft de telefoon uitgevonden?,Who invented the telephone?,,wrong
+Invent,Uitvinden,Wie heeft de telefoon uitgevonden?,Who invented the telephone?,,correct
 Development,Ontwikkeling,De ontwikkeling gaat snel.,The development is going fast.,,hard
-That much,Zoveel,Ik heb zoveel werk.,I have so much work.,,
-Upstairs,Boven,Mijn kamer is boven.,My room is upstairs.,,
-Downstairs,Beneden,De keuken is beneden.,The kitchen is downstairs.,,
-High,Hoog,Het vliegtuig vliegt hoog.,The plane flies high.,,
-Low,laag,Het plafond is laag.,The ceiling is low.,,
-Up,Omhoog,Kijk omhoog!,Look up!,,
-Low,Omlaag,Ga de trap omlaag.,Go down the stairs.,,
-General,Algemeen,In het algemeen ben ik tevreden.,"In general, I am satisfied.",,
-Area,Gebied,Dit gebied is beschermd.,This area is protected.,,
-Story,Verhaal,Vertel me een verhaal.,Tell me a story.,,
-Consequences,Gevolg,Dat heeft grote gevolgen.,That has big consequences.,,
-Back in the days,Vroeger,Vroeger woonde ik in Parijs.,"In the past, I lived in Paris.",,
-Moreover,Bovendien,Het is laat en bovendien koud.,It is late and moreover cold.,,
-Possibility,Mogelijkheid,Er is een mogelijkheid.,There is a possibility.,,
-Determined,Bepaald,Op een bepaald moment ging hij weg.,At a certain moment he left.,,
-Oppositie,Tegenover,De winkel is tegenover het station.,The shop is opposite the station.,,
-Right away,Meteen,Ik kom meteen.,I will come right away.,,
-Research,Onderzoek,Het onderzoek duurt lang.,The research takes a long time.,,
-Movement,Beweging,Beweging is gezond.,Movement is healthy.,,
-Probability,Waarschijnlijk,Hij komt waarschijnlijk morgen.,He will probably come tomorrow.,,
-Attention,Aandacht,Hij vraagt veel aandacht.,He asks for a lot of attention.,,
-War,Oorlog,De oorlog duurde vier jaar.,The war lasted four years.,,
+That much,Zoveel,Ik heb zoveel werk.,I have so much work.,,correct
+Upstairs,Boven,Mijn kamer is boven.,My room is upstairs.,,correct
+Downstairs,Beneden,De keuken is beneden.,The kitchen is downstairs.,,hard
+High,Hoog,Het vliegtuig vliegt hoog.,The plane flies high.,,correct
+Low,laag,Het plafond is laag.,The ceiling is low.,,correct
+Up,Omhoog,Kijk omhoog!,Look up!,,hard
+Low,Omlaag,Ga de trap omlaag.,Go down the stairs.,,hard
+General,Algemeen,In het algemeen ben ik tevreden.,"In general, I am satisfied.",,hard
+Area,Gebied,Dit gebied is beschermd.,This area is protected.,,hard
+Story,Verhaal,Vertel me een verhaal.,Tell me a story.,,correct
+Consequences,Gevolg,Dat heeft grote gevolgen.,That has big consequences.,,hard
+Back in the days,Vroeger,Vroeger woonde ik in Parijs.,"In the past, I lived in Paris.",,hard
+Moreover,Bovendien,Het is laat en bovendien koud.,It is late and moreover cold.,,hard
+Possibility,Mogelijkheid,Er is een mogelijkheid.,There is a possibility.,,hard
+Determined,Bepaald,Op een bepaald moment ging hij weg.,At a certain moment he left.,,hard
+Oppositie,Tegenover,De winkel is tegenover het station.,The shop is opposite the station.,,hard
+Right away,Meteen,Ik kom meteen.,I will come right away.,,hard
+Research,Onderzoek,Het onderzoek duurt lang.,The research takes a long time.,,hard
+Movement,Beweging,Beweging is gezond.,Movement is healthy.,,hard
+Probability,Waarschijnlijk,Hij komt waarschijnlijk morgen.,He will probably come tomorrow.,,hard
+Attention,Aandacht,Hij vraagt veel aandacht.,He asks for a lot of attention.,,wrong
+War,Oorlog,De oorlog duurde vier jaar.,The war lasted four years.,,hard
 mostly,meestal,We eten meestal om zes uur.,We mostly eat at six o'clock.,,hard
 Barely,Nauwelijks,Ik kan je nauwelijks horen.,I can barely hear you.,,
 Suddenly,Plotseling,Plotseling begon het te regenen.,Suddenly it started to rain.,,
@@ -308,7 +308,7 @@ Clean/dirty,Schoon/vies,"Mijn handen zijn schoon, niet vies.","My hands are clea
 In front of,voor,De auto staat voor het huis.,The car is in front of the house.,,
 Behind,Achter,De tuin is achter het huis.,The garden is behind the house.,,
 Above/bellow,Boven/onder,"De lamp hangt boven de tafel, de mat ligt eronder.","The lamp hangs above the table, the mat lies below it.",,
-Oppositie,Tegenover,Hij zit tegenover mij.,He sits opposite me.,,
+Oppositie,Tegenover,Hij zit tegenover mij.,He sits opposite me.,,hard
 Against,Tegen,De fiets staat tegen de muur.,The bike is against the wall.,,
 Next to,Naast,Ik zit naast mijn vriend.,I sit next to my friend.,,
 On,Op,Het boek ligt op de tafel.,The book is on the table.,,
