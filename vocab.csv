@@ -274,11 +274,11 @@ Possibility,Mogelijkheid,Er is een mogelijkheid.,There is a possibility.,,hard
 Determined,Bepaald,Op een bepaald moment ging hij weg.,At a certain moment he left.,,hard
 Oppositie,Tegenover,De winkel is tegenover het station.,The shop is opposite the station.,,hard
 Right away,Meteen,Ik kom meteen.,I will come right away.,,hard
-Research,Onderzoek,Het onderzoek duurt lang.,The research takes a long time.,,correct
-Movement,Beweging,Beweging is gezond.,Movement is healthy.,,correct
-Probability,Waarschijnlijk,Hij komt waarschijnlijk morgen.,He will probably come tomorrow.,,wrong
+Research,Onderzoek,Het onderzoek duurt lang.,The research takes a long time.,,hard
+Movement,Beweging,Beweging is gezond.,Movement is healthy.,,hard
+Probability,Waarschijnlijk,Hij komt waarschijnlijk morgen.,He will probably come tomorrow.,,hard
 Attention,Aandacht,Hij vraagt veel aandacht.,He asks for a lot of attention.,,hard
-War,Oorlog,De oorlog duurde vier jaar.,The war lasted four years.,,correct
+War,Oorlog,De oorlog duurde vier jaar.,The war lasted four years.,,hard
 mostly,meestal,We eten meestal om zes uur.,We mostly eat at six o'clock.,,correct
 Barely,Nauwelijks,Ik kan je nauwelijks horen.,I can barely hear you.,,hard
 Suddenly,Plotseling,Plotseling begon het te regenen.,Suddenly it started to rain.,,hard
@@ -290,12 +290,12 @@ Experience,Ervaring,Hij heeft veel ervaring.,He has a lot of experience.,,hard
 Education,Onderwijs,Het onderwijs is hier goed.,The education is good here.,,hard
 Section,Gedeelte,Dit gedeelte is gesloten.,This section is closed.,,hard
 Humid,Vochtig,Het is vochtig vandaag.,It is humid today.,,correct
-Explanation,Uitleg,Bedankt voor de uitleg.,Thanks for the explanation.,,correct
-Being followed,Gevolgd,Ik word gevolgd.,I am being followed.,,hard
+Explanation,Uitleg,Bedankt voor de uitleg.,Thanks for the explanation.,,hard
+Being followed,Gevolgd,Ik word gevolgd.,I am being followed.,,correct
 Being supported,Gesteund,Hij wordt gesteund.,He is being supported.,,hard
 Good/bad,Goed/slecht,"Het weer is goed, niet slecht.","The weather is good, not bad.",,correct
 Big/Small,Groot/klein,"De hond is groot, de kat is klein.","The dog is big, the cat is small.",,correct
-Rich/poor,Rijk/arm,"Sommige mensen zijn rijk, andere arm.","Some people are rich, others poor.",,
+Rich/poor,Rijk/arm,"Sommige mensen zijn rijk, andere arm.","Some people are rich, others poor.",,correct
 Fat/thin,Dik/dun,"Het boek is dik, de krant is dun.","The book is thick, the newspaper is thin.",,correct
 Narrow/wide,Smal/breed,"De straat is smal, de weg is breed.","The street is narrow, the road is wide.",,correct
 Tall/short,Lang/kort,"Hij is lang, zij is kort.","He is tall, she is short.",,correct
