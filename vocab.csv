@@ -274,8 +274,8 @@ Possibility,Mogelijkheid,Er is een mogelijkheid.,There is a possibility.,,hard
 Determined,Bepaald,Op een bepaald moment ging hij weg.,At a certain moment he left.,,hard
 Oppositie,Tegenover,De winkel is tegenover het station.,The shop is opposite the station.,,hard
 Right away,Meteen,Ik kom meteen.,I will come right away.,,hard
-Research,Onderzoek,Het onderzoek duurt lang.,The research takes a long time.,,hard
-Movement,Beweging,Beweging is gezond.,Movement is healthy.,,hard
+Research,Onderzoek,Het onderzoek duurt lang.,The research takes a long time.,,correct
+Movement,Beweging,Beweging is gezond.,Movement is healthy.,,correct
 Probability,Waarschijnlijk,Hij komt waarschijnlijk morgen.,He will probably come tomorrow.,,hard
 Attention,Aandacht,Hij vraagt veel aandacht.,He asks for a lot of attention.,,hard
 War,Oorlog,De oorlog duurde vier jaar.,The war lasted four years.,,hard
@@ -299,31 +299,31 @@ Rich/poor,Rijk/arm,"Sommige mensen zijn rijk, andere arm.","Some people are rich
 Fat/thin,Dik/dun,"Het boek is dik, de krant is dun.","The book is thick, the newspaper is thin.",,correct
 Narrow/wide,Smal/breed,"De straat is smal, de weg is breed.","The street is narrow, the road is wide.",,correct
 Tall/short,Lang/kort,"Hij is lang, zij is kort.","He is tall, she is short.",,correct
-Heavy/light,Zwaar/Licht,"De koffer is zwaar, de tas is licht.","The suitcase is heavy, the bag is light.",,
-Slow/fast,Langzaam/snel,"De trein is snel, de bus is langzaam.","The train is fast, the bus is slow.",,
-Previous/Next,Vorige/volgende,"Vorige week regende het, volgende week wordt het mooi.","Last week it rained, next week it will be nice.",,
-High/low,hoog/laag,"De berg is hoog, het dal is laag.","The mountain is high, the valley is low.",,
-Beautiful/ugly,Mooi/lelijk,"Het schilderij is mooi, niet lelijk.","The painting is beautiful, not ugly.",,
-Clean/dirty,Schoon/vies,"Mijn handen zijn schoon, niet vies.","My hands are clean, not dirty.",,
-In front of,voor,De auto staat voor het huis.,The car is in front of the house.,,
-Behind,Achter,De tuin is achter het huis.,The garden is behind the house.,,
-Above/bellow,Boven/onder,"De lamp hangt boven de tafel, de mat ligt eronder.","The lamp hangs above the table, the mat lies below it.",,
+Heavy/light,Zwaar/Licht,"De koffer is zwaar, de tas is licht.","The suitcase is heavy, the bag is light.",,correct
+Slow/fast,Langzaam/snel,"De trein is snel, de bus is langzaam.","The train is fast, the bus is slow.",,correct
+Previous/Next,Vorige/volgende,"Vorige week regende het, volgende week wordt het mooi.","Last week it rained, next week it will be nice.",,hard
+High/low,hoog/laag,"De berg is hoog, het dal is laag.","The mountain is high, the valley is low.",,correct
+Beautiful/ugly,Mooi/lelijk,"Het schilderij is mooi, niet lelijk.","The painting is beautiful, not ugly.",,correct
+Clean/dirty,Schoon/vies,"Mijn handen zijn schoon, niet vies.","My hands are clean, not dirty.",,hard
+In front of,voor,De auto staat voor het huis.,The car is in front of the house.,,correct
+Behind,Achter,De tuin is achter het huis.,The garden is behind the house.,,correct
+Above/bellow,Boven/onder,"De lamp hangt boven de tafel, de mat ligt eronder.","The lamp hangs above the table, the mat lies below it.",,correct
 Oppositie,Tegenover,Hij zit tegenover mij.,He sits opposite me.,,hard
-Against,Tegen,De fiets staat tegen de muur.,The bike is against the wall.,,
-Next to,Naast,Ik zit naast mijn vriend.,I sit next to my friend.,,
-On,Op,Het boek ligt op de tafel.,The book is on the table.,,
-Attached to,Aan,De foto hangt aan de muur.,The photo hangs on the wall.,,
-To take along,Meenemen,Ik neem mijn paraplu mee.,I take my umbrella along.,,
-To coorporate,Samenwerking,We hebben een goede samenwerking.,We have a good cooperation.,,
-To leave,Weggaan,Ik moet nu weggaan.,I have to leave now.,,
-To explain,Uitleggen,Kun je dit uitleggen?,Can you explain this?,,
-To get up,Opstaan,Ik sta om zeven uur op.,I get up at seven o'clock.,,
-To come back,Terugkomen,Wanneer kom je terug?,When are you coming back?,,
-To pick up,Ophalen,Ik haal je om acht uur op.,I will pick you up at eight.,,
-To solve,Oplossen,We moeten dit probleem oplossen.,We have to solve this problem.,,
+Against,Tegen,De fiets staat tegen de muur.,The bike is against the wall.,,correct
+Next to,Naast,Ik zit naast mijn vriend.,I sit next to my friend.,,correct
+On,Op,Het boek ligt op de tafel.,The book is on the table.,,correct
+Attached to,Aan,De foto hangt aan de muur.,The photo hangs on the wall.,,hard
+To take along,Meenemen,Ik neem mijn paraplu mee.,I take my umbrella along.,,hard
+To coorporate,Samenwerking,We hebben een goede samenwerking.,We have a good cooperation.,,correct
+To leave,Weggaan,Ik moet nu weggaan.,I have to leave now.,,hard
+To explain,Uitleggen,Kun je dit uitleggen?,Can you explain this?,,correct
+To get up,Opstaan,Ik sta om zeven uur op.,I get up at seven o'clock.,,hard
+To come back,Terugkomen,Wanneer kom je terug?,When are you coming back?,,hard
+To pick up,Ophalen,Ik haal je om acht uur op.,I will pick you up at eight.,,hard
+To solve,Oplossen,We moeten dit probleem oplossen.,We have to solve this problem.,,hard
 To enter,Binnenkomen,Je mag binnenkomen.,You may come in.,,
-To make an appointment,Afspreken,Zullen we iets afspreken?,Shall we make an appointment?,,
-To arrive,Aankomen,Hoe laat kom je aan?,What time do you arrive?,,
+To make an appointment,Afspreken,Zullen we iets afspreken?,Shall we make an appointment?,,correct
+To arrive,Aankomen,Hoe laat kom je aan?,What time do you arrive?,,correct
 To go out,Uitgaan,We gaan vanavond uit.,We are going out tonight.,,
 To offer,Aanbieden,Mag ik je iets aanbieden?,May I offer you something?,,
 To call up,Opbellen,Ik ga de dokter opbellen.,I am going to call the doctor.,,
