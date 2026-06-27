@@ -24,31 +24,31 @@ realize,realizeren,Ik realiseer me dat het laat is.,I realize that it is late.,,
 voice,stem,Zij heeft een mooie stem.,She has a beautiful voice.,,correct
 such as,zolas,"Ik hou van fruit, zoals appels.","I like fruit, such as apples.",,correct
 cultural,cultureel,Het is een cultureel festival.,It is a cultural festival.,,correct
-side,kant,Het ligt aan de andere kant.,It is on the other side.,correct,
-track,spoor,De trein staat op spoor twee.,The train is on track two.,correct,
-wide,breed,De rivier is heel breed.,The river is very wide.,hard,
-narrow - small,smal,De straat is erg smal.,The street is very narrow.,correct,
-relatively,relatief,Het is relatief goedkoop.,It is relatively cheap.,correct,
-there,er,Er is een probleem.,There is a problem.,correct,
-piece,stuk,Ik wil een stuk taart.,I want a piece of cake.,correct,
-loose,los,Mijn schoen zit los.,My shoe is loose.,correct,
-sweet,lief,Wat ben je lief!,How sweet you are!,correct,
-sweet[taste],zoet,De koffie is te zoet.,The coffee is too sweet.,correct,
-salty,zout,De soep is te zout.,The soup is too salty.,correct,
-sour,zuur,De citroen is heel zuur.,The lemon is very sour.,correct,
-spicy,pittig,Dit eten is erg pittig.,This food is very spicy.,correct,
-beach,strand,We gaan naar het strand.,We are going to the beach.,correct,
-own,eigen,Ik heb mijn eigen kamer.,I have my own room.,correct,
-gladly,graag,Ik drink graag koffie.,I gladly drink coffee.,correct,
-to spread,verspreiden,Het nieuws verspreidt zich snel.,The news spreads quickly.,correct,
-to gather,verzamelen,Ik verzamel postzegels.,I collect stamps.,correct,
-to start,beginnen,We beginnen om negen uur.,We start at nine o'clock.,correct,
-to end,eindigen,De film eindigt goed.,The film ends well.,correct,
-to continue,verdergaan,We gaan morgen verder.,We continue tomorrow.,hard,
-further,verder,Het station is verder dan ik dacht.,The station is further than I thought.,correct,
-far,ver,Het is niet ver van hier.,It is not far from here.,correct,
-to produce,produceren,Deze fabriek produceert auto's.,This factory produces cars.,correct,
-mistake,fout,Ik heb een fout gemaakt.,I made a mistake.,correct,
+side,kant,Het ligt aan de andere kant.,It is on the other side.,,correct
+track,spoor,De trein staat op spoor twee.,The train is on track two.,,correct
+wide,breed,De rivier is heel breed.,The river is very wide.,,hard
+narrow - small,smal,De straat is erg smal.,The street is very narrow.,,correct
+relatively,relatief,Het is relatief goedkoop.,It is relatively cheap.,,correct
+there,er,Er is een probleem.,There is a problem.,,correct
+piece,stuk,Ik wil een stuk taart.,I want a piece of cake.,,correct
+loose,los,Mijn schoen zit los.,My shoe is loose.,,correct
+sweet,lief,Wat ben je lief!,How sweet you are!,,correct
+sweet[taste],zoet,De koffie is te zoet.,The coffee is too sweet.,,correct
+salty,zout,De soep is te zout.,The soup is too salty.,,correct
+sour,zuur,De citroen is heel zuur.,The lemon is very sour.,,correct
+spicy,pittig,Dit eten is erg pittig.,This food is very spicy.,,correct
+beach,strand,We gaan naar het strand.,We are going to the beach.,,correct
+own,eigen,Ik heb mijn eigen kamer.,I have my own room.,,correct
+gladly,graag,Ik drink graag koffie.,I gladly drink coffee.,,correct
+to spread,verspreiden,Het nieuws verspreidt zich snel.,The news spreads quickly.,,correct
+to gather,verzamelen,Ik verzamel postzegels.,I collect stamps.,,correct
+to start,beginnen,We beginnen om negen uur.,We start at nine o'clock.,,correct
+to end,eindigen,De film eindigt goed.,The film ends well.,,correct
+to continue,verdergaan,We gaan morgen verder.,We continue tomorrow.,,hard
+further,verder,Het station is verder dan ik dacht.,The station is further than I thought.,,correct
+far,ver,Het is niet ver van hier.,It is not far from here.,,correct
+to produce,produceren,Deze fabriek produceert auto's.,This factory produces cars.,,correct
+mistake,fout,Ik heb een fout gemaakt.,I made a mistake.,,correct
 only,pas,Het is pas acht uur.,It is only eight o'clock.,,
 laugh,lachen,We moesten heel hard lachen.,We had to laugh very hard.,,
 leader,leider,Hij is de leider van de groep.,He is the leader of the group.,,
@@ -99,59 +99,59 @@ to publish,publiceren,Hij wil een boek publiceren.,He wants to publish a book.,,
 hat,hoed,Zij draagt een mooie hoed.,She wears a nice hat.,,
 mean,menen,Ik meen het echt.,I really mean it.,,
 again,opnieuw,Probeer het opnieuw.,Try it again.,,
-floor,vloer,De vloer is nat.,The floor is wet.,correct,correct
+floor,vloer,De vloer is nat.,The floor is wet.,,correct
 to send,zenden / verzenden,Ik ga het pakket verzenden.,I am going to send the package.,,
-to send,sturen / versturen,Ik stuur je een bericht.,I will send you a message.,correct,
-to share,delen,We delen de pizza.,We share the pizza.,correct,
-to save,sparen,Ik spaar voor een nieuwe fiets.,I am saving for a new bike.,hard,
-to save/to keep,bewaren,Ik bewaar de oude foto's.,I keep the old photos.,hard,
-cloud,wolk,Er is geen wolk aan de hemel.,There is no cloud in the sky.,hard,
-warmth,warmte,Ik geniet van de warmte.,I enjoy the warmth.,correct,
-chest,borst,Ik voel pijn in mijn borst.,I feel pain in my chest.,correct,
-cool,koel,Het is koel buiten.,It is cool outside.,correct,
-battle,slag,Het was een zware slag.,It was a hard battle.,hard,
-however,toch,"Het regent, maar ik ga toch.","It is raining, but I am going anyway.",hard,
-ever,ooit,Ben je ooit in Parijs geweest?,Have you ever been to Paris?,hard,
-never,nooit,Ik ben nooit te laat.,I am never late.,correct,
-still,nog,Ik woon hier nog.,I still live here.,correct,
-blow,klap,Dat was een harde klap.,That was a hard blow.,hard,
-life,leven,Het leven is mooi.,Life is beautiful.,hard,
-border,grens,We rijden over de grens.,We drive across the border.,hard,
-pattern,patroon,De jurk heeft een mooi patroon.,The dress has a nice pattern.,hard,
-deep,diep,Het water is heel diep.,The water is very deep.,correct,
-flow,stroom,De stroom van de rivier is sterk.,The flow of the river is strong.,correct,
-press,pers,De pers schrijft over het nieuws.,The press writes about the news.,hard,
-client,klant,De klant heeft altijd gelijk.,The customer is always right.,correct,
-rongue,tong,Ik heb mijn tong gebrand.,I burned my tongue.,correct,
-profit,winst,Het bedrijf maakt veel winst.,The company makes a lot of profit.,hard,
-corner,hoek,De winkel is om de hoek.,The shop is around the corner.,correct,
-along,langs,We lopen langs het water.,We walk along the water.,correct,
-good looking,knap,Hij is een knappe man.,He is a handsome man.,hard,hard
-source,bron,Wat is de bron van dit nieuws?,What is the source of this news?,hard,correct
-opportunity,kans,Dit is een goede kans.,This is a good opportunity.,hard,hard
-punishment,straf,De straf was niet eerlijk.,The punishment was not fair.,hard,hard
-dead,dood,De plant is dood.,The plant is dead.,hard,hard
-flat,vlak,Nederland is heel vlak.,The Netherlands is very flat.,hard,hard
-statue,beeld,Er staat een beeld op het plein.,There is a statue on the square.,hard,hard
-pain,pijn,Ik heb veel pijn.,I have a lot of pain.,hard,correct
-floor,vloer,Ik veeg de vloer.,I sweep the floor.,correct,correct
-neighborhood,buurt,Ik woon in een rustige buurt.,I live in a quiet neighborhood.,correct,correct
-to dream,dromen,Ik droom elke nacht.,I dream every night.,hard,correct
-bow,boog,De brug heeft een mooie boog.,The bridge has a nice arch.,hard,hard
-spacious,ruim,Het huis is heel ruim.,The house is very spacious.,hard,hard
-Feeling,gevoel,Ik heb een goed gevoel.,I have a good feeling.,correct,correct
-Happy,Blij,Ik ben heel blij.,I am very happy.,correct,correct
+to send,sturen / versturen,Ik stuur je een bericht.,I will send you a message.,,correct
+to share,delen,We delen de pizza.,We share the pizza.,,correct
+to save,sparen,Ik spaar voor een nieuwe fiets.,I am saving for a new bike.,,hard
+to save/to keep,bewaren,Ik bewaar de oude foto's.,I keep the old photos.,,hard
+cloud,wolk,Er is geen wolk aan de hemel.,There is no cloud in the sky.,,hard
+warmth,warmte,Ik geniet van de warmte.,I enjoy the warmth.,,correct
+chest,borst,Ik voel pijn in mijn borst.,I feel pain in my chest.,,correct
+cool,koel,Het is koel buiten.,It is cool outside.,,correct
+battle,slag,Het was een zware slag.,It was a hard battle.,,hard
+however,toch,"Het regent, maar ik ga toch.","It is raining, but I am going anyway.",,hard
+ever,ooit,Ben je ooit in Parijs geweest?,Have you ever been to Paris?,,hard
+never,nooit,Ik ben nooit te laat.,I am never late.,,correct
+still,nog,Ik woon hier nog.,I still live here.,,correct
+blow,klap,Dat was een harde klap.,That was a hard blow.,,hard
+life,leven,Het leven is mooi.,Life is beautiful.,,hard
+border,grens,We rijden over de grens.,We drive across the border.,,hard
+pattern,patroon,De jurk heeft een mooi patroon.,The dress has a nice pattern.,,hard
+deep,diep,Het water is heel diep.,The water is very deep.,,correct
+flow,stroom,De stroom van de rivier is sterk.,The flow of the river is strong.,,correct
+press,pers,De pers schrijft over het nieuws.,The press writes about the news.,,hard
+client,klant,De klant heeft altijd gelijk.,The customer is always right.,,correct
+rongue,tong,Ik heb mijn tong gebrand.,I burned my tongue.,,correct
+profit,winst,Het bedrijf maakt veel winst.,The company makes a lot of profit.,,hard
+corner,hoek,De winkel is om de hoek.,The shop is around the corner.,,correct
+along,langs,We lopen langs het water.,We walk along the water.,,correct
+good looking,knap,Hij is een knappe man.,He is a handsome man.,,hard
+source,bron,Wat is de bron van dit nieuws?,What is the source of this news?,,correct
+opportunity,kans,Dit is een goede kans.,This is a good opportunity.,,hard
+punishment,straf,De straf was niet eerlijk.,The punishment was not fair.,,hard
+dead,dood,De plant is dood.,The plant is dead.,,hard
+flat,vlak,Nederland is heel vlak.,The Netherlands is very flat.,,hard
+statue,beeld,Er staat een beeld op het plein.,There is a statue on the square.,,hard
+pain,pijn,Ik heb veel pijn.,I have a lot of pain.,,correct
+floor,vloer,Ik veeg de vloer.,I sweep the floor.,,correct
+neighborhood,buurt,Ik woon in een rustige buurt.,I live in a quiet neighborhood.,,correct
+to dream,dromen,Ik droom elke nacht.,I dream every night.,,correct
+bow,boog,De brug heeft een mooie boog.,The bridge has a nice arch.,,hard
+spacious,ruim,Het huis is heel ruim.,The house is very spacious.,,hard
+Feeling,gevoel,Ik heb een goed gevoel.,I have a good feeling.,,correct
+Happy,Blij,Ik ben heel blij.,I am very happy.,,correct
 For a bit,even,"Wacht even, alsjeblieft.","Wait a moment, please.",,
-a while,een poos,Ik heb hem een poos niet gezien.,I haven't seen him for a while.,hard,hard
-vision,visie,Hij heeft een duidelijke visie.,He has a clear vision.,hard,correct
-even,zelfs,Zelfs de kinderen hielpen mee.,Even the children helped.,correct,correct
-stretch,strekken,Ik strek mijn benen.,I stretch my legs.,hard,correct
-personality,persoonlijkheid,Zij heeft een sterke persoonlijkheid.,She has a strong personality.,correct,correct
-personally,persoonlijk,Persoonlijk vind ik dit beter.,"Personally, I think this is better.",correct,correct
-throat,keel,Mijn keel doet pijn.,My throat hurts.,hard,correct
-each,elk,Elk kind krijgt een cadeau.,Each child gets a present.,correct,correct
-hole,gat,Er zit een gat in mijn sok.,There is a hole in my sock.,hard,hard
-wish,wens,Doe een wens!,Make a wish!,correct,correct
+a while,een poos,Ik heb hem een poos niet gezien.,I haven't seen him for a while.,,hard
+vision,visie,Hij heeft een duidelijke visie.,He has a clear vision.,,correct
+even,zelfs,Zelfs de kinderen hielpen mee.,Even the children helped.,,correct
+stretch,strekken,Ik strek mijn benen.,I stretch my legs.,,correct
+personality,persoonlijkheid,Zij heeft een sterke persoonlijkheid.,She has a strong personality.,,correct
+personally,persoonlijk,Persoonlijk vind ik dit beter.,"Personally, I think this is better.",,correct
+throat,keel,Mijn keel doet pijn.,My throat hurts.,,correct
+each,elk,Elk kind krijgt een cadeau.,Each child gets a present.,,correct
+hole,gat,Er zit een gat in mijn sok.,There is a hole in my sock.,,hard
+wish,wens,Doe een wens!,Make a wish!,,correct
 mean,gemeen,Doe niet zo gemeen.,Don't be so mean.,,
 farmer,boer,De boer werkt op het land.,The farmer works on the land.,,
 reason,reden,Wat is de reden?,What is the reason?,,
@@ -217,7 +217,7 @@ to flee,vluchten,De mensen vluchten voor de oorlog.,The people flee from the war
 edge,rand,Hij zit op de rand van het bed.,He sits on the edge of the bed.,,hard
 measure,maat,Welke maat heb je?,What size are you?,,correct
 strict,streng,De leraar is heel streng.,The teacher is very strict.,,hard
-True,oprecht,Hij is een oprecht persoon.,He is a sincere person.,,hard
+TRUE,oprecht,Hij is een oprecht persoon.,He is a sincere person.,,hard
 Fale,onecht,Dit is een onechte diamant.,This is a fake diamond.,,hard
 star,ster,De sterren zijn mooi vannacht.,The stars are beautiful tonight.,,correct
 to climb,klimmen,De kinderen klimmen in de boom.,The children climb in the tree.,,hard
@@ -276,7 +276,7 @@ Oppositie,Tegenover,De winkel is tegenover het station.,The shop is opposite the
 Right away,Meteen,Ik kom meteen.,I will come right away.,,hard
 Research,Onderzoek,Het onderzoek duurt lang.,The research takes a long time.,,correct
 Movement,Beweging,Beweging is gezond.,Movement is healthy.,,correct
-Probability,Waarschijnlijk,Hij komt waarschijnlijk morgen.,He will probably come tomorrow.,,hard
+Probably / Probability,Waarschijnlijk / Waarschijnlikheid,Hij komt waarschijnlijk morgen.,He will probably come tomorrow.,,hard
 Attention,Aandacht,Hij vraagt veel aandacht.,He asks for a lot of attention.,,hard
 War,Oorlog,De oorlog duurde vier jaar.,The war lasted four years.,,hard
 mostly,meestal,We eten meestal om zes uur.,We mostly eat at six o'clock.,,correct
@@ -337,10 +337,10 @@ To take away,Wegbrengen,Ik breng het pakket weg.,I take the package away.,,hard
 To cross,Oversteken,Kijk uit als je oversteekt.,Watch out when you cross.,,hard
 To go down,Afgaan,We gaan de berg af.,We go down the mountain.,,hard
 To come across (somebody),tegenkomen,Ik kwam een oude vriend tegen.,I came across an old friend.,,hard
-To pay,Afrekenen,Ik wil graag afrekenen.,I would like to pay.,,hard
+To pay,Afrekenen / betalen,Ik wil graag afrekenen.,I would like to pay.,,hard
 To finish up,Afmaken,Ik moet mijn werk afmaken.,I have to finish my work.,,hard
 To graduate,Afstuderen,Ik ga volgend jaar afstuderen.,I will graduate next year.,,hard
-To practice,Meedoen,Doe je mee met het spel?,Are you joining the game?,,hard
+To participate,Meedoen,Doe je mee met het spel?,Are you joining the game?,,hard
 To come along,Meekomen,Kom je met ons mee?,Are you coming along with us?,,correct
 To watch with,Meekijken,Mag ik even meekijken?,May I watch along for a bit?,,correct
 To put down,Neerleggen,Leg het boek neer.,Put the book down.,,correct
@@ -358,3 +358,5 @@ Suitable,geschikt,,,,hard
 resuscitate,reanimeren,,,,correct
 Meeting - Gathering,bijeenkomst,,,,correct
 Broken items,kapotte spullen,,,,correct
+mee--,join-,,,,
+neer--,down-,,,,
