@@ -1,5 +1,5 @@
 English,Dutch,Example1,Example2,Result,Result_Ar
-fact,feit,Dat is een bekend feit.,That is a well-known fact.,,hard
+fact,feit,Dat is een bekend feit.,That is a well-known fact.,,correct
 to wish,wensen,Ik wens je een fijne dag.,I wish you a nice day.,,correct
 demand,eis,Dat is een belangrijke eis.,That is an important demand.,,hard
 influence,invloed,Hij heeft veel invloed op mij.,He has a lot of influence on me.,,
@@ -231,7 +231,7 @@ formation,vorming,De vorming van wolken is interessant.,The formation of clouds 
 faith,vertrouwen,Ik heb vertrouwen in jou.,I have faith in you.,,hard
 stomach,maag,Mijn maag is leeg.,My stomach is empty.,,hard
 branch,tak,De vogel zit op een tak.,The bird sits on a branch.,,hard
-fact,feit,Het is een feit dat water nat is.,It is a fact that water is wet.,,hard
+fact,feit,Het is een feit dat water nat is.,It is a fact that water is wet.,,correct
 people,volk,Het Nederlandse volk is aardig.,The Dutch people are kind.,,correct
 sentence,zin,Maak een zin met dit woord.,Make a sentence with this word.,,correct
 rush,haast,Ik heb haast.,I am in a hurry.,,hard
@@ -349,7 +349,7 @@ To handle,Omgaan met,Hij kan goed met kinderen omgaan.,He is good with children.
 To write down,Opschrijven,Schrijf je adres op.,Write down your address.,,correct
 Company,Bedrijf,,,,correct
 Canoeing,Kanovaren,,,,correct
-We recommend,we raden aan om,,,,correct
+We recommend,we raden aan om,,,,hard
 participate,maedoen,,,,correct
 take a long,meenemen,,,,correct
 to register,aanmelden,,,,hard
@@ -358,5 +358,5 @@ Suitable,geschikt,,,,hard
 resuscitate,reanimeren,,,,correct
 Meeting - Gathering,bijeenkomst,,,,correct
 Broken items,kapotte spullen,,,,correct
-mee--,join-,,,,
-neer--,down-,,,,
+mee--,join-,,,,correct
+neer--,down-,,,,correct
